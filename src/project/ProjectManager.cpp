@@ -1,5 +1,7 @@
 #include "project/ProjectManager.h"
 #include "project/WorkspaceManager.h"
+#include "project/ProjectIndexer.h"
+#include "language/IncludeIndex.h"
 #include "cpp/CompilationDatabase.h"
 #include "core/Logger.h"
 #include "core/Config.h"
@@ -27,6 +29,10 @@ bool ProjectManager::openProject(const std::filesystem::path& projectPath) {
     initializeIdeDirectory();
     ensureGitIgnoreEntries();
     detectProjectType();
+
+    // Clear old project header include index for new project context
+    Language::IncludeIndex::instance().clearProjectHeaders();
+    Language::IncludeIndex::instance().loadFromDisk(m_paths.ide());
     
     // Initialize Workspace Storage & File Logging inside .ide/
     WorkspaceManager::instance().initializeWorkspace(m_paths.ide());
@@ -39,6 +45,9 @@ bool ProjectManager::openProject(const std::filesystem::path& projectPath) {
     Cpp::CompilationDatabase::instance().ensureCompilationDatabase(m_paths);
 
     scanProjectFiles();
+
+    // Start background project indexer (non-blocking)
+    ProjectIndexer::instance().startIndexing(m_paths);
 
     // Persist subsystem data to .ide subdirectories
     std::vector<std::string> fileList;

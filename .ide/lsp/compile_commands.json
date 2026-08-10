@@ -15,9 +15,34 @@
         "file": "E:\\Projects\\nscode\\build\\CMakeFiles\\ShowIncludes\\main.c"
     },
     {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\A5Q22ZIOL5\\moc_ProjectIndexer.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\A5Q22ZIOL5\\moc_ProjectIndexer.cpp"
+    },
+    {
         "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\A5Q22ZIOL5\\moc_ProjectManager.cpp\"",
         "directory": "E:\\Projects\\nscode",
         "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\A5Q22ZIOL5\\moc_ProjectManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspDiagnosticsManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspDiagnosticsManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspRequestManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspRequestManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspSemanticTokenManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspSemanticTokenManager.cpp"
     },
     {
         "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DGKFLW4REM\\moc_CompletionService.cpp\"",
@@ -78,6 +103,11 @@
         "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_EditorWidget.cpp\"",
         "directory": "E:\\Projects\\nscode",
         "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_EditorWidget.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\XPS2I2KIDW\\moc_SnippetEngine.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\XPS2I2KIDW\\moc_SnippetEngine.cpp"
     },
     {
         "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_BreadcrumbBar.cpp\"",
@@ -345,6 +375,26 @@
         "file": "E:\\Projects\\nscode\\src\\editor\\EditorWidget.cpp"
     },
     {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetEngine.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetEngine.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetParser.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetParser.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetRegistry.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetRegistry.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetSession.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetSession.cpp"
+    },
+    {
         "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\language\\CompletionContext.cpp\"",
         "directory": "E:\\Projects\\nscode",
         "file": "E:\\Projects\\nscode\\src\\language\\CompletionContext.cpp"
@@ -360,6 +410,11 @@
         "file": "E:\\Projects\\nscode\\src\\language\\CompletionService.cpp"
     },
     {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\language\\IncludeIndex.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\language\\IncludeIndex.cpp"
+    },
+    {
         "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\language\\LspClient.cpp\"",
         "directory": "E:\\Projects\\nscode",
         "file": "E:\\Projects\\nscode\\src\\language\\LspClient.cpp"
@@ -370,9 +425,34 @@
         "file": "E:\\Projects\\nscode\\src\\language\\LspTransport.cpp"
     },
     {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\lsp\\LspDiagnosticsManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\lsp\\LspDiagnosticsManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\lsp\\LspManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\lsp\\LspManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\lsp\\LspRequestManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\lsp\\LspRequestManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\lsp\\LspSemanticTokenManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\lsp\\LspSemanticTokenManager.cpp"
+    },
+    {
         "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\main.cpp\"",
         "directory": "E:\\Projects\\nscode",
         "file": "E:\\Projects\\nscode\\src\\main.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\project\\ProjectIndexer.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\project\\ProjectIndexer.cpp"
     },
     {
         "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\project\\ProjectManager.cpp\"",

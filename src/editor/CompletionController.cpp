@@ -1,4 +1,5 @@
 #include "editor/CompletionController.h"
+#include "editor/snippets/SnippetEngine.h"
 #include "core/Logger.h"
 #include <QApplication>
 
@@ -34,6 +35,9 @@ CompletionController::CompletionController(Language::CompletionService* service,
 
 bool CompletionController::handleKeyPress(QKeyEvent* event) {
     if (!m_session.active || !m_popup || !m_popup->isVisible()) {
+        if (m_activeEditor && Snippets::SnippetEngine::instance().isSessionActive()) {
+            return Snippets::SnippetEngine::instance().handleKeyEvent(m_activeEditor, event);
+        }
         return false;
     }
 
@@ -136,6 +140,12 @@ void CompletionController::triggerCompletion(bool isManual) {
 
     auto ctx = Language::ContextAnalyzer::analyze(linePrefix, isManual);
 
+    // Suppress automatic completion if prefix is empty and not member access or include path
+    if (!isManual && ctx.typedPrefix.isEmpty() && ctx.kind == Language::ContextKind::GeneralCode) {
+        cancelSession(CancelReason::InvalidContext);
+        return;
+    }
+
     // Suppress completion in invalid contexts unless manual trigger
     if ((ctx.kind == Language::ContextKind::Comment || ctx.kind == Language::ContextKind::StringLiteral) && !isManual) {
         cancelSession(CancelReason::InvalidContext);
@@ -234,20 +244,26 @@ void CompletionController::onTextChanged() {
 void CompletionController::onCompletionItemSelected(const CompletionItemData& item) {
     if (!m_activeEditor) return;
 
+    int prefixLen = m_session.prefix.length();
+
+    if (item.isSnippet) {
+        cancelSession(CancelReason::Accepted);
+        Snippets::SnippetEngine::instance().expandSnippetTemplate(m_activeEditor, item.insertText, prefixLen);
+        return;
+    }
+
     QTextCursor cursor = m_activeEditor->textCursor();
     int col = cursor.positionInBlock();
     QString lineText = cursor.block().text().left(col);
 
-    int prefixLen = m_session.prefix.length();
     if (prefixLen > 0 && lineText.endsWith(m_session.prefix)) {
         for (int i = 0; i < prefixLen; ++i) {
             cursor.deletePreviousChar();
         }
-    } else {
-        cursor.select(QTextCursor::WordUnderCursor);
     }
 
     QString replacement = item.insertText.isEmpty() ? item.label : item.insertText;
+
     if ((item.kind == 2 || item.kind == 3) && !replacement.contains("(")) {
         replacement += "()";
     }

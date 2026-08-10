@@ -14,8 +14,13 @@ static const std::unordered_set<std::string> s_keywords = {
     "static", "inline", "extern", "mutable", "volatile", "auto", "decltype",
     "if", "else", "for", "while", "do", "switch", "case", "default", "return",
     "break", "continue", "new", "delete", "sizeof", "alignof", "noexcept", "throw",
-    "try", "catch", "this", "nullptr", "true", "false", "void", "int", "float",
-    "double", "bool", "char", "short", "long", "unsigned", "signed", "int32_t", "uint32_t"
+    "try", "catch", "this", "nullptr", "true", "false"
+};
+
+static const std::unordered_set<std::string> s_builtinTypes = {
+    "void", "int", "float", "double", "bool", "char", "short", "long",
+    "unsigned", "signed", "size_t", "uint8_t", "uint16_t", "uint32_t", "uint64_t",
+    "int8_t", "int16_t", "int32_t", "int64_t"
 };
 
 static const std::unordered_set<std::string> s_unrealMacros = {
@@ -104,10 +109,9 @@ QTextCharFormat TreeSitterHighlighter::determineFormat(TSNode node) const {
     if (!typeStr) return {};
 
     std::string type(typeStr);
-
     const auto& colors = UI::ThemeManager::instance().colors();
 
-    // 1. Comments
+    // 1. Comments (Muted Green Italic)
     if (type == "comment") {
         QTextCharFormat fmt;
         fmt.setForeground(colors.comment);
@@ -115,21 +119,21 @@ QTextCharFormat TreeSitterHighlighter::determineFormat(TSNode node) const {
         return fmt;
     }
 
-    // 2. Strings & Character Literals
+    // 2. Strings & Character Literals (Orange/Brown #CE9178)
     if (type == "string_literal" || type == "char_literal" || type == "system_lib_string" || type == "raw_string_literal") {
         QTextCharFormat fmt;
         fmt.setForeground(colors.string);
         return fmt;
     }
 
-    // 3. Numbers
+    // 3. Numbers (Light Green #B5CEA8)
     if (type == "number_literal") {
         QTextCharFormat fmt;
         fmt.setForeground(colors.number);
         return fmt;
     }
 
-    // 4. Preprocessor Directive Keywords (#include, #define, etc.)
+    // 4. Preprocessor Directive Keywords (#include, #define, #pragma, #ifdef, #endif)
     if (type == "#include" || type == "#define" || type == "#if" || type == "#ifdef" || type == "#ifndef" || type == "#else" || type == "#elif" || type == "#endif" || type == "#pragma") {
         QTextCharFormat fmt;
         fmt.setForeground(colors.macro);
@@ -137,14 +141,14 @@ QTextCharFormat TreeSitterHighlighter::determineFormat(TSNode node) const {
         return fmt;
     }
 
-    // 5. Types
+    // 5. Built-in Types & User Types/Classes (Teal/Cyan #4EC9B0)
     if (type == "primitive_type" || type == "type_identifier" || type == "struct_specifier" || type == "class_specifier" || type == "enum_specifier") {
         QTextCharFormat fmt;
         fmt.setForeground(colors.type);
         return fmt;
     }
 
-    // 6. Keywords
+    // 6. Keywords (Purple/Magenta #C586C0 Bold)
     if (s_keywords.count(type)) {
         QTextCharFormat fmt;
         fmt.setForeground(colors.keyword);
@@ -152,7 +156,14 @@ QTextCharFormat TreeSitterHighlighter::determineFormat(TSNode node) const {
         return fmt;
     }
 
-    // Node content checking for identifiers
+    // 7. Built-in Types (Teal #4EC9B0)
+    if (s_builtinTypes.count(type)) {
+        QTextCharFormat fmt;
+        fmt.setForeground(colors.type);
+        return fmt;
+    }
+
+    // Node content checking for text tokens
     uint32_t startByte = ts_node_start_byte(node);
     uint32_t endByte = ts_node_end_byte(node);
     if (endByte > startByte && endByte <= m_cachedSource.length()) {
@@ -166,6 +177,13 @@ QTextCharFormat TreeSitterHighlighter::determineFormat(TSNode node) const {
             return fmt;
         }
 
+        // Built-in types check by text token
+        if (s_builtinTypes.count(tokenText)) {
+            QTextCharFormat fmt;
+            fmt.setForeground(colors.type);
+            return fmt;
+        }
+
         // Unreal Macros check (UCLASS, UPROPERTY, UFUNCTION, GENERATED_BODY)
         if (s_unrealMacros.count(tokenText) || tokenText.rfind("UCLASS", 0) == 0 || tokenText.rfind("UPROPERTY", 0) == 0 || tokenText.rfind("UFUNCTION", 0) == 0 || tokenText.rfind("GENERATED_BODY", 0) == 0) {
             QTextCharFormat fmt;
@@ -175,7 +193,7 @@ QTextCharFormat TreeSitterHighlighter::determineFormat(TSNode node) const {
         }
     }
 
-    // 7. Functions & Methods (Identifiers inside function declarator or call expression)
+    // 8. Functions & Methods (Yellow/Gold #DCDCAA)
     if (type == "identifier" || type == "field_identifier") {
         TSNode parent = ts_node_parent(node);
         if (!ts_node_is_null(parent)) {
@@ -186,9 +204,13 @@ QTextCharFormat TreeSitterHighlighter::determineFormat(TSNode node) const {
                     QTextCharFormat fmt;
                     fmt.setForeground(colors.function);
                     return fmt;
-                } else if (pType == "field_declaration") {
+                } else if (pType == "field_declaration" || pType == "parameter_declaration") {
                     QTextCharFormat fmt;
-                    fmt.setForeground(QColor("#9CDCFE"));
+                    fmt.setForeground(colors.parameter);
+                    return fmt;
+                } else if (pType == "qualified_identifier" || pType == "namespace_definition" || pType == "using_declaration") {
+                    QTextCharFormat fmt;
+                    fmt.setForeground(colors.nameSpace);
                     return fmt;
                 }
             }

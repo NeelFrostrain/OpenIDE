@@ -42,6 +42,7 @@ public:
     void didSave(const std::filesystem::path& path);
 
     void requestCompletion(const std::filesystem::path& path, int line, int column, std::function<void(const std::vector<Editor::CompletionItemData>&)> callback);
+    void requestHover(const std::filesystem::path& path, int line, int column, std::function<void(const QString&)> callback);
     void requestDefinition(const std::filesystem::path& path, int line, int column, std::function<void(const std::vector<LocationResult>&)> callback);
     void requestReferences(const std::filesystem::path& path, int line, int column, std::function<void(const std::vector<LocationResult>&)> callback);
     void requestSignatureHelp(const std::filesystem::path& path, int line, int column, std::function<void(const SignatureInfo&)> callback);

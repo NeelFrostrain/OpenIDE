@@ -2,6 +2,7 @@
 
 #include "editor/EditorWidget.h"
 #include "editor/CompletionController.h"
+#include "lsp/LspManager.h"
 #include "language/LspClient.h"
 #include "language/CompletionService.h"
 #include "core/Logger.h"

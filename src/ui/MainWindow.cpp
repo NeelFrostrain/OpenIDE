@@ -379,10 +379,16 @@ void MainWindow::openFolder(const std::filesystem::path& path) {
 
     m_searchDialog->setFiles(Project::ProjectManager::instance().sourceFiles());
 
-    // Launch clangd LSP server for this workspace
-    QString clangdPath = MyIDE::Core::Config::instance().clangdExecutable();
-    m_lspClient->start(clangdPath, path);
-    m_lspStatusLabel->setText("clangd: Starting...");
+    // Launch long-lived clangd server via LspManager for this workspace
+    connect(&Lsp::LspManager::instance(), &Lsp::LspManager::stateChanged, [this](Lsp::ServerState state) {
+        if (state == Lsp::ServerState::Ready) {
+            m_lspStatusLabel->setText("● C++ | clangd Ready ✓");
+        } else {
+            m_lspStatusLabel->setText(QString("● C++ | clangd %1").arg(Lsp::LspManager::instance().stateString()));
+        }
+    });
+
+    Lsp::LspManager::instance().startServer(Project::ProjectManager::instance().paths());
 
     // Restore workspace state from .ide/workspace/workspace.json
     auto state = Project::WorkspaceManager::instance().loadWorkspace();

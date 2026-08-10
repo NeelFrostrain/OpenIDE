@@ -1,4 +1,6 @@
 #include "language/CompletionRanking.h"
+#include "language/IncludeIndex.h"
+#include "editor/snippets/SnippetRegistry.h"
 #include "core/Logger.h"
 #include <algorithm>
 #include <unordered_map>
@@ -44,27 +46,35 @@ int CompletionRanking::calculateScore(const Editor::CompletionItemData& item, co
         return score;
     }
 
-    // 1. Exact Token Match (+3000)
+    // 1. Exact Token Match (+4000 for snippet, +3000 for symbol, +2000 for keyword)
     if (label == prefix) {
-        score += 3000;
+        if (item.isSnippet) {
+            score += 4000;
+        } else if (item.kind == 14) {
+            score += 2000;
+        } else {
+            score += 3000;
+        }
     }
-    // 2. Case-Sensitive Prefix Match (+1500)
+    // 2. Case-Sensitive Prefix Match (+2500 for snippet, +1500 for normal)
     else if (label.startsWith(prefix, Qt::CaseSensitive)) {
-        score += 1500;
+        if (item.isSnippet) {
+            score += 2500;
+        } else {
+            score += 1500;
+        }
     }
     // 3. Case-Insensitive Prefix Match (+1000)
     else if (label.startsWith(prefix, Qt::CaseInsensitive)) {
         score += 1000;
     }
-    // 4. Substring / Qualified Substring Match (-800 penalty)
+    // 4. Non-Prefix Substring Match (-2000 heavy penalty)
     else if (label.contains(prefix, Qt::CaseInsensitive)) {
-        score += 100;
-        // Heavy penalty if typed prefix occurs as part of another word (e.g. std::is_class containing "class")
-        score -= 800;
+        score -= 2000;
     }
-    // 5. Unrelated / Weak Fuzzy (-1000)
+    // 5. Unrelated / Weak Fuzzy (-3000)
     else {
-        score -= 1000;
+        score -= 3000;
     }
 
     // Context & Kind Scoring
@@ -75,6 +85,7 @@ int CompletionRanking::calculateScore(const Editor::CompletionItemData& item, co
         if (item.kind == 7 || item.kind == 22) score += 600; // Class / Struct
         if (item.kind == 5 || item.kind == 10) score += 500; // Field / Property
         if (item.kind == 1)  score += 600;                  // Local document word
+        if (item.isSnippet || item.kind == 15) score += 800;   // Code Snippets / Live Templates
         if (item.kind == 14) score += 500;                  // Keywords
     } else if (ctx.kind == ContextKind::MemberAccess) {
         if (item.kind == 2 || item.kind == 3)  score += 800; // Methods / Functions
@@ -99,22 +110,44 @@ std::vector<Editor::CompletionItemData> CompletionRanking::rankAndFilter(
         return {};
     }
 
-    std::vector<Editor::CompletionItemData> candidates = rawItems;
+    std::vector<Editor::CompletionItemData> candidates;
 
-    if (ctx.kind == ContextKind::GeneralCode) {
-        auto keywords = cppKeywords();
-        candidates.insert(candidates.end(), keywords.begin(), keywords.end());
+    if (ctx.kind == ContextKind::IncludePath || ctx.kind == ContextKind::IncludeSystem) {
+        bool isSystem = (ctx.kind == ContextKind::IncludeSystem);
+        // Include context: Filter rawItems to header/file items only
+        for (const auto& item : rawItems) {
+            if (item.kind == 17 || item.source == Editor::CompletionSource::Clangd) {
+                candidates.push_back(item);
+            }
+        }
+        // Fallback: Fetch from cached IncludeIndex
+        auto indexedHeaders = IncludeIndex::instance().getIncludeCompletions(ctx.typedPrefix, isSystem);
+        candidates.insert(candidates.end(), indexedHeaders.begin(), indexedHeaders.end());
+    } else {
+        candidates = rawItems;
+        if (ctx.kind == ContextKind::GeneralCode) {
+            auto keywords = cppKeywords();
+            candidates.insert(candidates.end(), keywords.begin(), keywords.end());
+
+            auto snippets = Editor::Snippets::SnippetRegistry::instance().toCompletionItems(ctx.typedPrefix, "cpp");
+            candidates.insert(candidates.end(), snippets.begin(), snippets.end());
+        }
     }
 
-    // Deduplication & Merging Stage
+    // Deduplication & Merging Stage (Preserving Snippet vs Keyword distinctions)
     std::unordered_map<std::string, Editor::CompletionItemData> mergedMap;
 
     for (const auto& item : candidates) {
-        if (!ctx.typedPrefix.isEmpty() && !item.label.contains(ctx.typedPrefix, Qt::CaseInsensitive)) {
-            continue;
+        if (!ctx.typedPrefix.isEmpty()) {
+            bool matches = item.label.startsWith(ctx.typedPrefix, Qt::CaseInsensitive);
+            if (!matches && ctx.typedPrefix.length() >= 2 && item.label.contains(ctx.typedPrefix, Qt::CaseInsensitive)) {
+                matches = true;
+            }
+            if (!matches) continue;
         }
 
-        std::string labelKey = item.label.toLower().toStdString();
+        std::string typeTag = item.isSnippet ? "snippet" : (item.kind == 14 ? "keyword" : "symbol");
+        std::string labelKey = item.label.toLower().toStdString() + "_" + typeTag;
         auto it = mergedMap.find(labelKey);
         if (it == mergedMap.end()) {
             mergedMap[labelKey] = item;

@@ -12,15 +12,21 @@ ThemeManager::ThemeManager() {
 }
 
 QFont ThemeManager::editorFont() const {
-    QFont font("Consolas", 11);
-    if (QFontDatabase::families().contains("JetBrains Mono")) {
-        font.setFamily("JetBrains Mono");
-    } else if (QFontDatabase::families().contains("Cascadia Code")) {
-        font.setFamily("Cascadia Code");
-    } else if (QFontDatabase::families().contains("Fira Code")) {
-        font.setFamily("Fira Code");
-    }
+    QStringList preferred = {"JetBrains Mono", "Cascadia Code", "Fira Code", "Consolas", "monospace"};
+    QStringList available = QFontDatabase::families();
+
+    QFont font;
+    font.setPointSize(14);
     font.setFixedPitch(true);
+    font.setStyleHint(QFont::Monospace);
+
+    for (const auto& family : preferred) {
+        if (available.contains(family, Qt::CaseInsensitive)) {
+            font.setFamily(family);
+            return font;
+        }
+    }
+    font.setFamily("Consolas");
     return font;
 }
 

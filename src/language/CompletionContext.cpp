@@ -16,16 +16,26 @@ CompletionContext ContextAnalyzer::analyze(const QString& lineBeforeCursor, bool
         return ctx;
     }
 
+    // Check for #include directive
+    if (lineBeforeCursor.contains("#include")) {
+        int quotePos = lineBeforeCursor.lastIndexOf('"');
+        int anglePos = lineBeforeCursor.lastIndexOf('<');
+
+        if (quotePos != -1 && (anglePos == -1 || quotePos > anglePos)) {
+            ctx.kind = ContextKind::IncludePath;
+            ctx.typedPrefix = lineBeforeCursor.mid(quotePos + 1);
+            return ctx;
+        } else if (anglePos != -1) {
+            ctx.kind = ContextKind::IncludeSystem;
+            ctx.typedPrefix = lineBeforeCursor.mid(anglePos + 1);
+            return ctx;
+        }
+    }
+
     // Check for string literal (odd number of quotes)
     int quoteCount = lineBeforeCursor.count('"');
     if (quoteCount % 2 != 0) {
-        if (lineBeforeCursor.contains("#include")) {
-            ctx.kind = ContextKind::IncludePath;
-            int lastQuote = lineBeforeCursor.lastIndexOf('"');
-            ctx.typedPrefix = lineBeforeCursor.mid(lastQuote + 1);
-        } else {
-            ctx.kind = ContextKind::StringLiteral;
-        }
+        ctx.kind = ContextKind::StringLiteral;
         return ctx;
     }
 

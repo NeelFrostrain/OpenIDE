@@ -1,5 +1,6 @@
 #include "editor/EditorWidget.h"
 #include "editor/CompletionController.h"
+#include "ui/ThemeManager.h"
 #include "core/Logger.h"
 #include <QPainter>
 #include <QTextBlock>
@@ -12,17 +13,21 @@ EditorWidget::EditorWidget(Document* doc, QWidget* parent)
     
     m_lineNumberArea = new LineNumberArea(this);
 
-    setFont(QFont("Consolas", 11));
+    setFont(UI::ThemeManager::instance().editorFont());
+    setTabStopDistance(4 * fontMetrics().horizontalAdvance(' '));
     setLineWrapMode(QPlainTextEdit::NoWrap);
 
-    // Dark editor palette styling
+    // Dark editor palette styling with subtle selection background (preserving syntax colors)
+    QPalette p = palette();
+    p.setColor(QPalette::Highlight, QColor("#214D73"));
+    setPalette(p);
+
     setStyleSheet(R"(
         QPlainTextEdit {
             background-color: #1E1E1E;
             color: #D4D4D4;
             border: none;
-            selection-background-color: #264F78;
-            selection-color: #FFFFFF;
+            selection-background-color: #214D73;
         }
     )");
 

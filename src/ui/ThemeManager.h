@@ -23,13 +23,17 @@ struct ThemeColors {
     QColor success        = QColor("#4CAF50");
 
     // Syntax colors
-    QColor keyword        = QColor("#569CD6");
+    QColor keyword        = QColor("#C586C0");
     QColor type           = QColor("#4EC9B0");
     QColor function       = QColor("#DCDCAA");
     QColor string         = QColor("#CE9178");
     QColor number         = QColor("#B5CEA8");
     QColor comment        = QColor("#6A9955");
     QColor macro          = QColor("#C586C0");
+    QColor parameter      = QColor("#9CDCFE");
+    QColor field          = QColor("#9CDCFE");
+    QColor nameSpace      = QColor("#569CD6");
+    QColor op             = QColor("#D4D4D4");
 };
 
 class ThemeManager {

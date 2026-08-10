@@ -9,6 +9,7 @@ enum class ContextKind {
     MemberAccess,       // -> or .
     ScopeResolution,    // ::
     IncludePath,        // #include "..."
+    IncludeSystem,      // #include <...>
     StringLiteral,      // "..."
     Comment             // // or /* ... */
 };

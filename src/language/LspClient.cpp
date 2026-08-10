@@ -240,6 +240,41 @@ void LspClient::requestCompletion(const std::filesystem::path& path, int line, i
     m_transport.sendJson(req);
 }
 
+void LspClient::requestHover(const std::filesystem::path& path, int line, int column, std::function<void(const QString&)> callback) {
+    if (!m_initialized) {
+        callback("");
+        return;
+    }
+
+    int id = m_nextRequestId++;
+    nlohmann::json params = {
+        {"textDocument", {{"uri", pathToUri(path).toStdString()}}},
+        {"position", {{"line", line - 1}, {"character", column}}}
+    };
+
+    nlohmann::json req = {
+        {"jsonrpc", "2.0"},
+        {"id", id},
+        {"method", "textDocument/hover"},
+        {"params", params}
+    };
+
+    m_responseCallbacks[id] = [callback](const nlohmann::json& response) {
+        QString contents;
+        if (response.contains("result") && response["result"].contains("contents")) {
+            const auto& c = response["result"]["contents"];
+            if (c.is_string()) {
+                contents = QString::fromStdString(c.get<std::string>());
+            } else if (c.is_object() && c.contains("value")) {
+                contents = QString::fromStdString(c["value"].get<std::string>());
+            }
+        }
+        callback(contents);
+    };
+
+    m_transport.sendJson(req);
+}
+
 void LspClient::requestDefinition(const std::filesystem::path& path, int line, int column, std::function<void(const std::vector<LocationResult>&)> callback) {
     if (!m_initialized) {
         callback({});

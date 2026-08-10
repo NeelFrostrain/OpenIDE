@@ -16,7 +16,8 @@ CompletionPopup::CompletionPopup(QWidget* parent)
 
     m_listWidget = new QListWidget(this);
     m_listWidget->setItemDelegate(new CompletionItemDelegate(this));
-    m_listWidget->setFixedWidth(380);
+    m_listWidget->setFixedWidth(480);
+    m_listWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     m_docPanel = new QWidget(this);
     m_docPanel->setFixedWidth(300);
@@ -81,7 +82,15 @@ void CompletionPopup::setCompletions(const std::vector<CompletionItemData>& item
 void CompletionPopup::filter(const QString& prefix) {
     m_listWidget->clear();
     for (const auto& item : m_allItems) {
-        if (prefix.isEmpty() || item.label.contains(prefix, Qt::CaseInsensitive)) {
+        bool matches = prefix.isEmpty();
+        if (!matches) {
+            if (item.label.startsWith(prefix, Qt::CaseInsensitive)) {
+                matches = true;
+            } else if (prefix.length() >= 2 && item.label.contains(prefix, Qt::CaseInsensitive)) {
+                matches = true;
+            }
+        }
+        if (matches) {
             auto* widgetItem = new QListWidgetItem(item.label, m_listWidget);
             widgetItem->setData(Qt::UserRole, item.detail);
             widgetItem->setData(Qt::UserRole + 1, item.documentation);
@@ -207,23 +216,30 @@ void CompletionItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem
     painter->setBrush(iconColor);
     painter->drawEllipse(iconRect.adjusted(2, 2, -2, -2));
 
-    // Draw Symbol Label
-    painter->setPen(QColor("#D4D4D4"));
-    QFont labelFont = option.font;
-    labelFont.setBold(true);
-    painter->setFont(labelFont);
-    QRect labelRect(iconRect.right() + 8, option.rect.top(), 200, option.rect.height());
-    painter->drawText(labelRect, Qt::AlignVCenter | Qt::AlignLeft, label);
-
-    // Draw Symbol Detail (Type / Class owner)
+    // Draw Symbol Detail (Type / Class owner) right-aligned
     if (!detail.isEmpty()) {
         painter->setPen(QColor("#808080"));
         QFont detailFont = option.font;
         detailFont.setPointSize(detailFont.pointSize() - 1);
         painter->setFont(detailFont);
-        QRect detailRect(labelRect.right() + 10, option.rect.top(), option.rect.right() - labelRect.right() - 15, option.rect.height());
+        QRect detailRect(option.rect.left(), option.rect.top(), option.rect.width() - 20, option.rect.height());
         painter->drawText(detailRect, Qt::AlignVCenter | Qt::AlignRight, detail);
     }
+
+    // Draw Symbol Label left-aligned with semantic color
+    QColor labelColor("#D4D4D4");
+    if (kind == 2 || kind == 3) labelColor = QColor("#DCDCAA"); // Method / Function
+    else if (kind == 6 || kind == 7 || kind == 22) labelColor = QColor("#4EC9B0"); // Class / Type / Struct
+    else if (kind == 5 || kind == 10 || kind == 25) labelColor = QColor("#9CDCFE"); // Field / Variable / Parameter
+    else if (kind == 13 || kind == 14) labelColor = QColor("#C586C0"); // Keyword / Enum / Macro
+
+    painter->setPen(labelColor);
+    QFont labelFont = option.font;
+    labelFont.setBold(true);
+    painter->setFont(labelFont);
+    int maxLabelWidth = option.rect.width() - 120;
+    QRect labelRect(iconRect.right() + 8, option.rect.top(), maxLabelWidth, option.rect.height());
+    painter->drawText(labelRect, Qt::AlignVCenter | Qt::AlignLeft, label);
 
     painter->restore();
 }
@@ -231,7 +247,7 @@ void CompletionItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem
 QSize CompletionItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const {
     Q_UNUSED(option);
     Q_UNUSED(index);
-    return QSize(380, 24);
+    return QSize(480, 24);
 }
 
 } // namespace MyIDE::Editor

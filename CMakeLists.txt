@@ -102,6 +102,15 @@ set(SOURCES
     src/editor/CompletionPopup.cpp
     src/editor/CompletionController.h
     src/editor/CompletionController.cpp
+    src/editor/snippets/SnippetDefinition.h
+    src/editor/snippets/SnippetParser.h
+    src/editor/snippets/SnippetParser.cpp
+    src/editor/snippets/SnippetRegistry.h
+    src/editor/snippets/SnippetRegistry.cpp
+    src/editor/snippets/SnippetSession.h
+    src/editor/snippets/SnippetSession.cpp
+    src/editor/snippets/SnippetEngine.h
+    src/editor/snippets/SnippetEngine.cpp
 
     # Syntax
     src/syntax/TreeSitterHighlighter.h
@@ -114,6 +123,8 @@ set(SOURCES
     src/language/CompletionRanking.cpp
     src/language/CompletionService.h
     src/language/CompletionService.cpp
+    src/language/IncludeIndex.h
+    src/language/IncludeIndex.cpp
     src/language/LspTransport.h
     src/language/LspTransport.cpp
     src/language/LspClient.h
@@ -124,8 +135,20 @@ set(SOURCES
     src/project/ProjectManager.cpp
     src/project/WorkspaceManager.h
     src/project/WorkspaceManager.cpp
+    src/project/ProjectIndexer.h
+    src/project/ProjectIndexer.cpp
 
-    # C++ & Unreal Intelligence
+    # C++ & Unreal Language Intelligence Subsystem
+    src/lsp/LspTypes.h
+    src/lsp/LspRequestManager.h
+    src/lsp/LspRequestManager.cpp
+    src/lsp/LspDiagnosticsManager.h
+    src/lsp/LspDiagnosticsManager.cpp
+    src/lsp/LspSemanticTokenManager.h
+    src/lsp/LspSemanticTokenManager.cpp
+    src/lsp/LspManager.h
+    src/lsp/LspManager.cpp
+
     src/cpp/CompilationDatabase.h
     src/cpp/CompilationDatabase.cpp
     src/unreal/UnrealProjectDetector.h

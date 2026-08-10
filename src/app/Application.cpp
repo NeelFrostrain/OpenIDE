@@ -2,6 +2,7 @@
 #include "core/Logger.h"
 #include "core/Config.h"
 
+
 namespace MyIDE::App {
 
 Application::Application(int& argc, char** argv)
