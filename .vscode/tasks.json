@@ -1,0 +1,40 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake Configure",
+            "type": "shell",
+            "command": "cmd.exe",
+            "args": [
+                "/c",
+                "call \"D:\\Applications\\VS\\Common7\\Tools\\VsDevCmd.bat\" -arch=x64 && cmake -B build -G \"Ninja\" -DCMAKE_PREFIX_PATH=\"C:\\Qt\\6.8.0\\msvc2022_64\" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+            ],
+            "options": {
+                "env": {
+                    "PATH": "C:\\Users\\neelo\\AppData\\Local\\Python\\pythoncore-3.14-64\\Scripts;C:\\Qt\\6.8.0\\msvc2022_64\\bin;${env:PATH}"
+                }
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build MyIDE",
+            "type": "shell",
+            "command": "cmd.exe",
+            "args": [
+                "/c",
+                "call \"D:\\Applications\\VS\\Common7\\Tools\\VsDevCmd.bat\" -arch=x64 && cmake --build build"
+            ],
+            "options": {
+                "env": {
+                    "PATH": "C:\\Users\\neelo\\AppData\\Local\\Python\\pythoncore-3.14-64\\Scripts;C:\\Qt\\6.8.0\\msvc2022_64\\bin;${env:PATH}"
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
