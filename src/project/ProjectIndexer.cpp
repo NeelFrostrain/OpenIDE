@@ -1,5 +1,6 @@
 #include "project/ProjectIndexer.h"
 #include "language/IncludeIndex.h"
+#include "cpp/CompilationDatabase.h"
 #include "core/Logger.h"
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -84,14 +85,12 @@ void ProjectIndexer::backgroundIndexingTask(ProjectPaths paths) {
                 std::string folderName = entry.path().filename().string();
                 for (const auto& ign : ignoredFolders) {
                     if (folderName == ign) {
-                        // Skip ignored build/intermediate folders
                         break;
                     }
                 }
             } else if (entry.is_regular_file()) {
                 std::string ext = entry.path().extension().string();
                 if (ext == ".cpp" || ext == ".h" || ext == ".hpp" || ext == ".c" || ext == ".cc" || ext == ".inl") {
-                    // Check parent path doesn't contain ignored folders
                     std::string pStr = entry.path().string();
                     bool skip = false;
                     for (const auto& ign : ignoredFolders) {
@@ -109,6 +108,24 @@ void ProjectIndexer::backgroundIndexingTask(ProjectPaths paths) {
                         }
                     }
                 }
+            }
+        }
+
+        // Scan extracted compilation database include directories for headers
+        auto extraIncPaths = Cpp::CompilationDatabase::instance().extractIncludePaths(paths.compileCommandsFile());
+        for (const auto& incDirStr : extraIncPaths) {
+            std::filesystem::path incDir(incDirStr);
+            if (std::filesystem::exists(incDir) && std::filesystem::is_directory(incDir)) {
+                try {
+                    for (const auto& entry : std::filesystem::directory_iterator(incDir)) {
+                        if (entry.is_regular_file()) {
+                            std::string ext = entry.path().extension().string();
+                            if (ext == ".h" || ext == ".hpp" || ext == ".inl") {
+                                Language::IncludeIndex::instance().addProjectHeader(entry.path().filename().string());
+                            }
+                        }
+                    }
+                } catch (...) {}
             }
         }
     } catch (const std::exception& e) {

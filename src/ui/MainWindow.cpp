@@ -12,6 +12,7 @@
 #include <QStatusBar>
 #include <QApplication>
 #include <QKeyEvent>
+#include <QMessageBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
@@ -160,6 +161,32 @@ void MainWindow::createMenuBar() {
     QMenu* buildMenu = menuBar->addMenu("&Build");
     buildMenu->addAction("&Build Project", QKeySequence("Ctrl+B"), []() {
         MyIDE::Core::Logger::instance().info("Build", "Starting project build...");
+    });
+    buildMenu->addAction("Inspect C++ &Configuration...", [this]() {
+        auto& pm = Project::ProjectManager::instance();
+        auto paths = pm.paths();
+        bool isUnreal = (pm.projectType() == Project::ProjectType::UnrealEngine);
+
+        QString statusText = QString(
+            "<b>Project Name:</b> %1<br>"
+            "<b>Project Root:</b> %2<br>"
+            "<b>Project Type:</b> %3<br>"
+            "<b>Compilation Database:</b> %4<br>"
+            "<b>Database Status:</b> %5<br>"
+            "<b>clangd Binary:</b> %6<br>"
+            "<b>clangd LSP Status:</b> %7<br>"
+            "<b>clangd Version:</b> %8"
+        )
+        .arg(pm.projectName())
+        .arg(QString::fromStdString(paths.root.string()))
+        .arg(isUnreal ? "Unreal Engine C++" : "Native C++")
+        .arg(QString::fromStdString((paths.lsp() / "compile_commands.json").string()))
+        .arg(std::filesystem::exists(paths.lsp() / "compile_commands.json") ? "VALID ✓" : "NOT FOUND ❌")
+        .arg(Lsp::LspManager::instance().discoverClangdBinary())
+        .arg(Lsp::LspManager::instance().stateString())
+        .arg(Lsp::LspManager::instance().serverVersion());
+
+        QMessageBox::information(this, "C++ & LSP Configuration", statusText);
     });
 
     // Help Menu

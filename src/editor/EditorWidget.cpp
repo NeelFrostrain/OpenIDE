@@ -224,11 +224,50 @@ void EditorWidget::focusOutEvent(QFocusEvent* event) {
     QPlainTextEdit::focusOutEvent(event);
 }
 
+void EditorWidget::wheelEvent(QWheelEvent* event) {
+    if (event->modifiers() & Qt::ControlModifier) {
+        int delta = event->angleDelta().y();
+        if (delta > 0) {
+            zoomIn(1);
+        } else if (delta < 0) {
+            zoomOut(1);
+        }
+        setTabStopDistance(4 * fontMetrics().horizontalAdvance(' '));
+        updateLineNumberAreaWidth(0);
+        event->accept();
+        return;
+    }
+    QPlainTextEdit::wheelEvent(event);
+}
+
 void EditorWidget::keyPressEvent(QKeyEvent* event) {
     // If completion controller is active, let it handle navigation and acceptance keys first
     if (m_completionController && m_completionController->handleKeyPress(event)) {
         event->accept();
         return;
+    }
+
+    // Ctrl + Plus / Ctrl + Minus / Ctrl + 0 Zooming
+    if (event->modifiers() & Qt::ControlModifier) {
+        if (event->key() == Qt::Key_Plus || event->key() == Qt::Key_Equal) {
+            zoomIn(1);
+            setTabStopDistance(4 * fontMetrics().horizontalAdvance(' '));
+            updateLineNumberAreaWidth(0);
+            event->accept();
+            return;
+        } else if (event->key() == Qt::Key_Minus) {
+            zoomOut(1);
+            setTabStopDistance(4 * fontMetrics().horizontalAdvance(' '));
+            updateLineNumberAreaWidth(0);
+            event->accept();
+            return;
+        } else if (event->key() == Qt::Key_0) {
+            setFont(UI::ThemeManager::instance().editorFont());
+            setTabStopDistance(4 * fontMetrics().horizontalAdvance(' '));
+            updateLineNumberAreaWidth(0);
+            event->accept();
+            return;
+        }
     }
 
     // Ctrl + Space manual completion trigger

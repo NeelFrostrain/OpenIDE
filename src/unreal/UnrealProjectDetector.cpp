@@ -1,4 +1,5 @@
 #include "unreal/UnrealProjectDetector.h"
+#include "language/IncludeIndex.h"
 #include "core/Logger.h"
 #include <QDir>
 #include <QSettings>
@@ -111,17 +112,23 @@ bool UnrealProjectDetector::generateCompileCommands(
     return false;
 
   // Check if compile_commands.json already exists in project or Intermediate
-  // folder
-  std::filesystem::path existingCommands =
-      info.projectPath / "compile_commands.json";
-  if (std::filesystem::exists(existingCommands)) {
+  std::filesystem::path existingCommands = info.projectPath / "compile_commands.json";
+  std::filesystem::path intermediateCommands = info.projectPath / "Intermediate" / "Build" / "Win64" / "compile_commands.json";
+
+  std::filesystem::path sourceCommands = std::filesystem::exists(existingCommands) ? existingCommands
+                                        : (std::filesystem::exists(intermediateCommands) ? intermediateCommands : std::filesystem::path());
+
+  if (!sourceCommands.empty()) {
     try {
+      std::filesystem::create_directories(outputPath.parent_path());
       std::filesystem::copy_file(
-          existingCommands, outputPath,
+          sourceCommands, outputPath,
           std::filesystem::copy_options::overwrite_existing);
       MyIDE::Core::Logger::instance().info(
           "UnrealDetector",
-          "Copied existing compile_commands.json to .ide workspace");
+          QString("Copied existing compile_commands.json from %1 to %2")
+              .arg(QString::fromStdString(sourceCommands.string()))
+              .arg(QString::fromStdString(outputPath.string())));
       return true;
     } catch (...) {
     }
@@ -130,51 +137,73 @@ bool UnrealProjectDetector::generateCompileCommands(
   // Synthesize compile_commands.json entries for Unreal source modules
   nlohmann::json compileDb = nlohmann::json::array();
 
-  std::vector<std::string> includeFlags;
+  std::vector<std::string> includeDirs;
   if (!info.enginePath.empty()) {
-    includeFlags.push_back(
-        "-I\"" +
-        (info.enginePath / "Engine/Source/Runtime/Core/Public").string() +
-        "\"");
-    includeFlags.push_back(
-        "-I\"" +
-        (info.enginePath / "Engine/Source/Runtime/Engine/Classes").string() +
-        "\"");
-    includeFlags.push_back(
-        "-I\"" +
-        (info.enginePath / "Engine/Source/Runtime/CoreUObject/Public")
-            .string() +
-        "\"");
+    std::vector<std::string> engineSubDirs = {
+        "Engine/Source/Runtime/Core/Public",
+        "Engine/Source/Runtime/CoreUObject/Public",
+        "Engine/Source/Runtime/Engine/Classes",
+        "Engine/Source/Runtime/Engine/Public",
+        "Engine/Source/Runtime/InputCore/Classes",
+        "Engine/Source/Runtime/InputCore/Public",
+        "Engine/Source/Runtime/Slate/Public",
+        "Engine/Source/Runtime/SlateCore/Public",
+        "Engine/Source/Runtime/UMG/Public",
+        "Engine/Source/Runtime/Projects/Public",
+        "Engine/Source/Runtime/RenderCore/Public",
+        "Engine/Source/Runtime/RHI/Public",
+        "Engine/Source/Runtime/TraceLog/Public",
+        "Engine/Source/Developer/TargetPlatform/Public",
+        "Engine/Intermediate/Build/Win64/UnrealEditor/Inc/CoreUObject",
+        "Engine/Intermediate/Build/Win64/UnrealEditor/Inc/Engine"
+    };
+
+    for (const auto& sub : engineSubDirs) {
+      std::filesystem::path fullP = info.enginePath / sub;
+      if (std::filesystem::exists(fullP)) {
+        includeDirs.push_back(fullP.string());
+      }
+    }
   }
 
   std::filesystem::path sourceDir = info.projectPath / "Source";
   if (std::filesystem::exists(sourceDir)) {
-    for (const auto &entry :
-         std::filesystem::recursive_directory_iterator(sourceDir)) {
-      if (entry.is_regular_file() && entry.path().extension() == ".cpp") {
-        std::string command =
-            "clang++ -std=c++20 -DWIN32 -DUBT_COMPILED_PLATFORM_WIN32=1 "
-            "-DWITH_ENGINE=1 -DUE_BUILD_DEVELOPMENT=1 ";
-        for (const auto &inc : includeFlags)
-          command += inc + " ";
-        command += "-I\"" + sourceDir.string() + "\" ";
-        command += "-c \"" + entry.path().string() + "\"";
+    includeDirs.push_back(sourceDir.string());
+    if (!info.projectName.isEmpty()) {
+      includeDirs.push_back((sourceDir / info.projectName.toStdString()).string());
+    }
+  }
 
-        nlohmann::json entryJson = {{"directory", info.projectPath.string()},
-                                    {"file", entry.path().string()},
-                                    {"command", command}};
+  std::string command = "clang++ -std=c++20 -DWIN32=1 -D_WIN64=1 -DPLATFORM_WINDOWS=1 -DUBT_COMPILED_PLATFORM_WIN64=1 "
+                        "-DWITH_ENGINE=1 -DWITH_EDITOR=1 -DWITH_COREUOBJECT=1 -DUE_BUILD_DEVELOPMENT=1 -DUE_EDITOR=1 ";
+
+  for (const auto &inc : includeDirs) {
+    command += "-I\"" + inc + "\" ";
+  }
+
+  if (std::filesystem::exists(sourceDir)) {
+    for (const auto &entry : std::filesystem::recursive_directory_iterator(sourceDir)) {
+      if (entry.is_regular_file() && entry.path().extension() == ".cpp") {
+        std::string entryCmd = command + "-c \"" + entry.path().string() + "\"";
+        nlohmann::json entryJson = {
+            {"directory", info.projectPath.string()},
+            {"file", entry.path().string()},
+            {"command", entryCmd}
+        };
         compileDb.push_back(entryJson);
       }
     }
   }
 
   try {
+    std::filesystem::create_directories(outputPath.parent_path());
     std::ofstream outFile(outputPath);
     outFile << compileDb.dump(4);
     MyIDE::Core::Logger::instance().info(
         "UnrealDetector",
-        QString("Generated compile_commands.json for Unreal Engine at %1")
-            .arg(QString::fromStdString(outputPath.string())));
+        QString("Generated compilation database for Unreal Engine at %1 with %2 files")
+            .arg(QString::fromStdString(outputPath.string()))
+            .arg(compileDb.size()));
     return true;
   } catch (const std::exception &e) {
     MyIDE::Core::Logger::instance().error(
