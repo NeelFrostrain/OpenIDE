@@ -1,20 +1,15 @@
-#include <QApplication>
-#include <cstring>
+#include "app/Application.h"
 #include "ui/MainWindow.h"
+#include "core/Logger.h"
 
-int main(int argc, char** argv) {
-    for (int i = 1; i < argc; ++i) {
-        if (std::strcmp(argv[i], "--gtest_list_tests") == 0) {
-            return 0;
-        }
+int main(int argc, char* argv[]) {
+    MyIDE::App::Application app(argc, argv);
+    if (!app.init()) {
+        return 1;
     }
 
-    QApplication app(argc, argv);
-    app.setApplicationName("MyIDE");
-    app.setOrganizationName("MyIDE");
-
-    MainWindow window;
-    window.show();
+    MyIDE::UI::MainWindow mainWindow;
+    mainWindow.show();
 
     return app.exec();
 }

@@ -1,125 +1,159 @@
-cmake_minimum_required(VERSION 3.21)
-project(MyIDE LANGUAGES C CXX)
+cmake_minimum_required(VERSION 3.22)
+project(MyIDE VERSION 0.1.0 LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC OFF)
-
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
-
-qt_standard_project_setup()
-
+if(POLICY CMP0135)
+    cmake_policy(SET CMP0135 NEW)
+endif()
 if(POLICY CMP0169)
     cmake_policy(SET CMP0169 OLD)
 endif()
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Enable AUTOMOC, AUTORCC, and AUTOUIC for Qt6
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+# Find Qt6 components
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui Network)
+
+# Fetch nlohmann_json for LSP & DAP messaging
 include(FetchContent)
 
 FetchContent_Declare(
-    tree_sitter
-    GIT_REPOSITORY https://github.com/tree-sitter/tree-sitter.git
-    GIT_TAG v0.22.6
+    json
+    URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
+FetchContent_MakeAvailable(json)
 
+# Fetch Tree-sitter C runtime & C++ grammar parser
 FetchContent_Declare(
-    tree_sitter_cpp
-    GIT_REPOSITORY https://github.com/tree-sitter/tree-sitter-cpp.git
-    GIT_TAG v0.22.0
+    tree-sitter
+    URL https://github.com/tree-sitter/tree-sitter/archive/refs/tags/v0.22.6.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_Declare(
+    tree-sitter-cpp
+    URL https://github.com/tree-sitter/tree-sitter-cpp/archive/refs/tags/v0.22.3.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 
-FetchContent_GetProperties(tree_sitter)
-if(NOT tree_sitter_POPULATED)
-    FetchContent_Populate(tree_sitter)
+# Tree-sitter build definitions
+FetchContent_GetProperties(tree-sitter)
+if(NOT tree-sitter_POPULATED)
+    FetchContent_Populate(tree-sitter)
+    add_library(tree_sitter_runtime STATIC
+        "${tree-sitter_SOURCE_DIR}/lib/src/lib.c"
+    )
+    target_include_directories(tree_sitter_runtime PUBLIC
+        "${tree-sitter_SOURCE_DIR}/lib/include"
+        "${tree-sitter_SOURCE_DIR}/lib/src"
+    )
 endif()
 
-FetchContent_GetProperties(tree_sitter_cpp)
-if(NOT tree_sitter_cpp_POPULATED)
-    FetchContent_Populate(tree_sitter_cpp)
+FetchContent_GetProperties(tree-sitter-cpp)
+if(NOT tree-sitter-cpp_POPULATED)
+    FetchContent_Populate(tree-sitter-cpp)
+    add_library(tree_sitter_cpp STATIC
+        "${tree-sitter-cpp_SOURCE_DIR}/src/parser.c"
+        "${tree-sitter-cpp_SOURCE_DIR}/src/scanner.c"
+    )
+    target_include_directories(tree_sitter_cpp PUBLIC
+        "${tree-sitter-cpp_SOURCE_DIR}/src"
+    )
+    target_link_libraries(tree_sitter_cpp PRIVATE tree_sitter_runtime)
 endif()
 
-add_library(tree-sitter STATIC ${tree_sitter_SOURCE_DIR}/lib/src/lib.c)
-set_target_properties(tree-sitter PROPERTIES LINKER_LANGUAGE C)
-set_source_files_properties(${tree_sitter_SOURCE_DIR}/lib/src/lib.c PROPERTIES LANGUAGE C)
-target_include_directories(tree-sitter PUBLIC ${tree_sitter_SOURCE_DIR}/lib/include ${tree_sitter_SOURCE_DIR}/lib/src)
 
-add_library(tree-sitter-cpp STATIC ${tree_sitter_cpp_SOURCE_DIR}/src/parser.c ${tree_sitter_cpp_SOURCE_DIR}/src/scanner.c)
-set_target_properties(tree-sitter-cpp PROPERTIES LINKER_LANGUAGE C)
-set_source_files_properties(${tree_sitter_cpp_SOURCE_DIR}/src/parser.c ${tree_sitter_cpp_SOURCE_DIR}/src/scanner.c PROPERTIES LANGUAGE C)
-target_include_directories(tree-sitter-cpp PUBLIC ${tree_sitter_cpp_SOURCE_DIR}/src ${tree_sitter_SOURCE_DIR}/lib/include)
+# Compiler options
+if(MSVC)
+    add_compile_options(/W4 /MP /utf-8 /permissive-)
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS NOMINMAX WIN32_LEAN_AND_MEAN)
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
-add_executable(myide
+# Source files
+set(SOURCES
+    # Main & App
     src/main.cpp
-    src/core/SymbolIndex.cpp
-    src/core/SymbolIndex.h
-    src/core/SymbolIndexer.cpp
-    src/core/SymbolIndexer.h
-    src/vcs/GitManager.cpp
-    src/vcs/GitManager.h
-    src/refactor/RefactorEngine.cpp
-    src/refactor/RefactorEngine.h
-    src/test/TestRunner.cpp
-    src/test/TestRunner.h
-    src/editor/SyntaxTheme.cpp
-    src/editor/SyntaxTheme.h
-    src/editor/TreeSitterHighlighter.cpp
-    src/editor/TreeSitterHighlighter.h
-    src/lsp/LspTypes.h
-    src/lsp/LspClient.cpp
-    src/lsp/LspClient.h
-    src/ui/TitleBar.cpp
-    src/ui/TitleBar.h
-    src/ui/MainWindow.cpp
-    src/ui/MainWindow.h
-    src/ui/FileTreePanel.cpp
-    src/ui/FileTreePanel.h
-    src/ui/EditorWidget.cpp
-    src/ui/EditorWidget.h
-    src/ui/OutputPanel.cpp
-    src/ui/OutputPanel.h
-    src/ui/ProblemsPanel.cpp
-    src/ui/ProblemsPanel.h
-    src/ui/CompletionPopup.cpp
-    src/ui/CompletionPopup.h
-    src/ui/SearchEverywhereDialog.cpp
+    src/app/Application.h
+    src/app/Application.cpp
+
+    # Core
+    src/core/Logger.h
+    src/core/Logger.cpp
+    src/core/Config.h
+    src/core/Config.cpp
+
+    # Editor
+    src/editor/ITextEditor.h
+    src/editor/Document.h
+    src/editor/Document.cpp
+    src/editor/DocumentManager.h
+    src/editor/DocumentManager.cpp
+    src/editor/EditorWidget.h
+    src/editor/EditorWidget.cpp
+    src/editor/CompletionPopup.h
+    src/editor/CompletionPopup.cpp
+
+    # Syntax
+    src/syntax/TreeSitterHighlighter.h
+    src/syntax/TreeSitterHighlighter.cpp
+
+    # Language (LSP & Autocomplete)
+    src/language/CompletionService.h
+    src/language/CompletionService.cpp
+    src/language/LspTransport.h
+    src/language/LspTransport.cpp
+    src/language/LspClient.h
+    src/language/LspClient.cpp
+
+    # Project
+    src/project/ProjectManager.h
+    src/project/ProjectManager.cpp
+
+    # C++ & Unreal Intelligence
+    src/cpp/CompilationDatabase.h
+    src/cpp/CompilationDatabase.cpp
+    src/unreal/UnrealProjectDetector.h
+    src/unreal/UnrealProjectDetector.cpp
+
+    # UI
+    src/ui/ThemeManager.h
+    src/ui/ThemeManager.cpp
+    src/ui/LeftToolBar.h
+    src/ui/LeftToolBar.cpp
+    src/ui/TopToolBar.h
+    src/ui/TopToolBar.cpp
+    src/ui/ToolWindowHeader.h
+    src/ui/ToolWindowHeader.cpp
+    src/ui/ProjectItemDelegate.h
+    src/ui/ProjectItemDelegate.cpp
+    src/ui/BreadcrumbBar.h
+    src/ui/BreadcrumbBar.cpp
     src/ui/SearchEverywhereDialog.h
-    src/ui/NavigationBar.cpp
-    src/ui/NavigationBar.h
-    src/ui/StructurePanel.cpp
-    src/ui/StructurePanel.h
-    src/ui/GitPanel.cpp
-    src/ui/GitPanel.h
-    src/dap/DapClient.cpp
-    src/dap/DapClient.h
-    src/dap/DapTypes.h
-    src/refactor/RenameDialog.cpp
-    src/refactor/RenameDialog.h
-    src/ui/CodeMinimap.cpp
-    src/ui/CodeMinimap.h
-    src/ui/TerminalPanel.cpp
-    src/ui/TerminalPanel.h
-    src/ui/DebugToolbar.cpp
-    src/ui/DebugToolbar.h
-    src/ui/VariablesPanel.cpp
-    src/ui/VariablesPanel.h
-    src/ui/CallStackPanel.cpp
-    src/ui/CallStackPanel.h
-    src/ui/CMakeBar.cpp
-    src/ui/CMakeBar.h
-    src/ui/TestRunnerPanel.cpp
-    src/ui/TestRunnerPanel.h
-    src/ui/ActivityBar.cpp
-    src/ui/ActivityBar.h
-    src/ui/StatusBar.cpp
-    src/ui/StatusBar.h
-    resources/resources.qrc
+    src/ui/SearchEverywhereDialog.cpp
+    src/ui/MainWindow.h
+    src/ui/MainWindow.cpp
 )
 
-target_include_directories(myide PRIVATE src ${tree_sitter_SOURCE_DIR}/lib/include ${tree_sitter_cpp_SOURCE_DIR}/src)
+add_executable(MyIDE ${SOURCES})
 
-target_link_libraries(myide PRIVATE Qt6::Widgets tree-sitter tree-sitter-cpp)
+target_link_libraries(MyIDE PRIVATE
+    Qt6::Core
+    Qt6::Widgets
+    Qt6::Gui
+    Qt6::Network
+    nlohmann_json::nlohmann_json
+    tree_sitter_runtime
+    tree_sitter_cpp
+)
 
-if(WIN32)
-    set_target_properties(myide PROPERTIES WIN32_EXECUTABLE TRUE)
-endif()
+target_include_directories(MyIDE PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+)

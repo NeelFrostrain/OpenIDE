@@ -1,455 +1,504 @@
-#include "MainWindow.h"
-#include "TitleBar.h"
-#include "FileTreePanel.h"
-#include "OutputPanel.h"
-#include "ProblemsPanel.h"
-#include "StructurePanel.h"
-#include "GitPanel.h"
-#include "TestRunnerPanel.h"
-#include "NavigationBar.h"
-#include "SearchEverywhereDialog.h"
-#include "EditorWidget.h"
-#include "CompletionPopup.h"
-#include "CMakeBar.h"
-#include "DebugToolbar.h"
-#include "TerminalPanel.h"
-#include "VariablesPanel.h"
-#include "CallStackPanel.h"
-#include "ActivityBar.h"
-#include "StatusBar.h"
-#include "refactor/RenameDialog.h"
-#include "core/SymbolIndexer.h"
-#include "vcs/GitManager.h"
-#include "lsp/LspClient.h"
-#include "dap/DapClient.h"
-
+#include "ui/MainWindow.h"
+#include "editor/DocumentManager.h"
+#include "project/ProjectManager.h"
+#include "core/Config.h"
+#include "core/Logger.h"
+#include <QMenuBar>
+#include <QMenu>
+#include <QFileDialog>
+#include <QSplitter>
+#include <QHeaderView>
+#include <QStatusBar>
 #include <QApplication>
+#include <QKeyEvent>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QTabWidget>
-#include <QDockWidget>
-#include <QMenuBar>
-#include <QFileDialog>
-#include <QFileInfo>
-#include <QFile>
-#include <QStandardPaths>
-#include <QKeyEvent>
-#include <QDateTime>
-#include <QDirIterator>
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
-    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-    resize(1420, 900);
+namespace MyIDE::UI {
 
-    m_gitManager = new GitManager(this);
-    m_symbolIndexer = new SymbolIndexer(&m_symbolIndex, this);
-    m_dapClient = new DapClient(this);
+MainWindow::MainWindow(QWidget* parent)
+    : QMainWindow(parent) {
 
-    m_centralHost = new QWidget(this);
-    m_centralHost->setObjectName("centralHost");
-    auto* outerLayout = new QVBoxLayout(m_centralHost);
-    outerLayout->setContentsMargins(1, 1, 1, 1);
-    outerLayout->setSpacing(0);
+    setWindowTitle("MyIDE — Native C++ & Unreal Engine IDE");
+    resize(1440, 900);
 
-    m_titleBar = new TitleBar(this);
-    connect(m_titleBar, &TitleBar::minimizeRequested, this, &QWidget::showMinimized);
-    connect(m_titleBar, &TitleBar::maximizeRestoreRequested, this, [this] {
-        isMaximized() ? showNormal() : showMaximized();
+    m_lspClient = new Language::LspClient(this);
+    m_completionService = new Language::CompletionService(m_lspClient, this);
+    m_searchDialog = new SearchEverywhereDialog(this);
+
+    connect(&MyIDE::Core::Logger::instance(), &MyIDE::Core::Logger::logEmitted, this, &MainWindow::onLogEmitted);
+    connect(m_lspClient, &Language::LspClient::diagnosticsPublished, this, &MainWindow::onDiagnosticsPublished);
+    connect(m_lspClient, &Language::LspClient::serverReady, [this]() {
+        m_lspStatusLabel->setText("clangd: Ready ✓");
     });
-    connect(m_titleBar, &TitleBar::closeRequested, this, &QWidget::close);
-    outerLayout->addWidget(m_titleBar);
 
-    auto* innerHost = new QWidget(m_centralHost);
-    auto* innerHostLayout = new QHBoxLayout(innerHost);
-    innerHostLayout->setContentsMargins(0, 0, 0, 0);
-    innerHostLayout->setSpacing(0);
+    connect(m_searchDialog, &SearchEverywhereDialog::fileSelected, [this](const std::filesystem::path& path, int line) {
+        openFile(path);
+        auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget());
+        if (editor && line > 0) editor->goToLine(line);
+    });
 
-    m_activityBar = new ActivityBar(innerHost);
-    innerHostLayout->addWidget(m_activityBar);
+    applyDarkTheme();
 
-    auto* rightArea = new QWidget(innerHost);
-    auto* rightAreaLayout = new QVBoxLayout(rightArea);
-    rightAreaLayout->setContentsMargins(0, 0, 0, 0);
-    rightAreaLayout->setSpacing(0);
+    // Central Container Layout
+    QWidget* rootWidget = new QWidget(this);
+    setCentralWidget(rootWidget);
 
-    auto* inner = new QMainWindow(rightArea);
-    inner->setWindowFlags(Qt::Widget);
-    rightAreaLayout->addWidget(inner, 1);
+    QHBoxLayout* rootLayout = new QHBoxLayout(rootWidget);
+    rootLayout->setContentsMargins(0, 0, 0, 0);
+    rootLayout->setSpacing(0);
 
-    m_statusBar = new StatusBar(rightArea);
-    rightAreaLayout->addWidget(m_statusBar);
+    // Left Tool Bar
+    m_leftToolBar = new LeftToolBar(this);
+    rootLayout->addWidget(m_leftToolBar);
 
-    innerHostLayout->addWidget(rightArea, 1);
-    outerLayout->addWidget(innerHost, 1);
+    // Right Workspace Area (Top Toolbar + Main Splitter)
+    QWidget* workspaceWidget = new QWidget(this);
+    QVBoxLayout* workspaceLayout = new QVBoxLayout(workspaceWidget);
+    workspaceLayout->setContentsMargins(0, 0, 0, 0);
+    workspaceLayout->setSpacing(0);
 
-    setCentralWidget(m_centralHost);
+    createMenuBar();
+    createTopToolBar();
+    workspaceLayout->addWidget(m_topToolBar);
 
-    // Menu bar
-    auto* menuBar = new QMenuBar(inner);
-    QMenu* fileMenu = menuBar->addMenu(tr("&File"));
-    QAction* openFolderAction = fileMenu->addAction(tr("Open &Folder..."));
-    connect(openFolderAction, &QAction::triggered, this, &MainWindow::openFolder);
+    QSplitter* mainSplitter = new QSplitter(Qt::Horizontal, workspaceWidget);
+    workspaceLayout->addWidget(mainSplitter, 1);
+
+    createSidebar();
+    
+    QSplitter* rightSplitter = new QSplitter(Qt::Vertical, mainSplitter);
+    createEditorArea();
+    createBottomPanels();
+
+    QWidget* editorContainer = new QWidget(this);
+    QVBoxLayout* editorLayout = new QVBoxLayout(editorContainer);
+    editorLayout->setContentsMargins(0, 0, 0, 0);
+    editorLayout->setSpacing(0);
+
+    m_breadcrumbBar = new BreadcrumbBar(this);
+    editorLayout->addWidget(m_breadcrumbBar);
+    editorLayout->addWidget(m_editorTabs);
+
+    rightSplitter->addWidget(editorContainer);
+    rightSplitter->addWidget(m_bottomPanel);
+    rightSplitter->setStretchFactor(0, 4);
+    rightSplitter->setStretchFactor(1, 1);
+
+    mainSplitter->addWidget(m_projectPanel);
+    mainSplitter->addWidget(rightSplitter);
+    mainSplitter->setStretchFactor(0, 1);
+    mainSplitter->setStretchFactor(1, 4);
+
+    rootLayout->addWidget(workspaceWidget, 1);
+
+    createStatusBar();
+
+    connect(m_leftToolBar, &LeftToolBar::tabToggled, [this](ToolWindowTab tab, bool visible) {
+        if (tab == ToolWindowTab::Project) {
+            m_projectPanel->setVisible(visible);
+        } else if (tab == ToolWindowTab::Run || tab == ToolWindowTab::Debug) {
+            m_bottomPanel->setVisible(visible);
+        }
+    });
+
+    MyIDE::Core::Logger::instance().info("UI", "MainWindow initialized with JetBrains Native IDE UI");
+}
+
+MainWindow::~MainWindow() {
+    delete m_fileModel;
+}
+
+void MainWindow::createMenuBar() {
+    QMenuBar* menuBar = this->menuBar();
+
+    // File Menu
+    QMenu* fileMenu = menuBar->addMenu("&File");
+    fileMenu->addAction("&Open File...", QKeySequence::Open, this, &MainWindow::onOpenFileAction);
+    fileMenu->addAction("Open &Folder...", this, &MainWindow::onOpenFolderAction);
     fileMenu->addSeparator();
-    QAction* exitAction = fileMenu->addAction(tr("E&xit"));
-    connect(exitAction, &QAction::triggered, this, &QWidget::close);
+    fileMenu->addAction("&Save", QKeySequence::Save, this, &MainWindow::onSaveAction);
+    fileMenu->addAction("Save &All", QKeySequence("Ctrl+Shift+S"), this, &MainWindow::onSaveAllAction);
+    fileMenu->addSeparator();
+    fileMenu->addAction("E&xit", QKeySequence::Quit, qApp, &QApplication::quit);
 
-    QMenu* navMenu = menuBar->addMenu(tr("&Navigate"));
-    QAction* searchAction = navMenu->addAction(tr("Search &Everywhere... (Ctrl+Shift+O)"));
-    connect(searchAction, &QAction::triggered, this, &MainWindow::openSearchEverywhere);
+    // Edit Menu
+    QMenu* editMenu = menuBar->addMenu("&Edit");
+    editMenu->addAction("&Undo", QKeySequence::Undo, [this]() {
+        if (auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget())) editor->undo();
+    });
+    editMenu->addAction("&Redo", QKeySequence::Redo, [this]() {
+        if (auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget())) editor->redo();
+    });
 
-    QMenu* refactorMenu = menuBar->addMenu(tr("&Refactor"));
-    QAction* renameAction = refactorMenu->addAction(tr("&Rename Symbol... (F2)"));
-    connect(renameAction, &QAction::triggered, this, &MainWindow::renameSymbolUnderCursor);
+    // Navigate Menu
+    QMenu* navMenu = menuBar->addMenu("&Navigate");
+    navMenu->addAction("&Search Everywhere", QKeySequence("Ctrl+P"), this, &MainWindow::onSearchEverywhereAction);
+    navMenu->addAction("Go to &Definition", QKeySequence(Qt::Key_F12), this, &MainWindow::onGoToDefinitionAction);
+    navMenu->addAction("Find &References", QKeySequence("Shift+F12"), this, &MainWindow::onFindReferencesAction);
+    navMenu->addAction("&Go to Line...", QKeySequence("Ctrl+G"), [this]() {
+        auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget());
+        if (editor) editor->goToLine(10);
+    });
 
-    inner->setMenuBar(menuBar);
+    // View Menu
+    QMenu* viewMenu = menuBar->addMenu("&View");
+    viewMenu->addAction("Toggle &Sidebar", [this]() {
+        m_projectPanel->setVisible(!m_projectPanel->isVisible());
+    });
+    viewMenu->addAction("Toggle &Output Panel", [this]() {
+        m_bottomPanel->setVisible(!m_bottomPanel->isVisible());
+    });
+    viewMenu->addAction("Toggle &Focus Mode", QKeySequence("Ctrl+Shift+F11"), this, &MainWindow::toggleFocusMode);
 
-    // Central area with Toolbars + NavigationBar + EditorTabs
-    auto* centralContainer = new QWidget(inner);
-    auto* centralLayout = new QVBoxLayout(centralContainer);
-    centralLayout->setContentsMargins(0, 0, 0, 0);
-    centralLayout->setSpacing(0);
+    // Build Menu
+    QMenu* buildMenu = menuBar->addMenu("&Build");
+    buildMenu->addAction("&Build Project", QKeySequence("Ctrl+B"), []() {
+        MyIDE::Core::Logger::instance().info("Build", "Starting project build...");
+    });
 
-    auto* topBarsLayout = new QHBoxLayout();
-    topBarsLayout->setContentsMargins(0, 0, 0, 0);
-    topBarsLayout->setSpacing(0);
+    // Help Menu
+    QMenu* helpMenu = menuBar->addMenu("&Help");
+    helpMenu->addAction("&About MyIDE", [this]() {
+        MyIDE::Core::Logger::instance().info("App", "MyIDE v0.1.0 — JetBrains-Inspired Native C++ IDE");
+    });
+}
 
-    m_cmakeBar = new CMakeBar(centralContainer);
-    topBarsLayout->addWidget(m_cmakeBar);
+void MainWindow::createTopToolBar() {
+    m_topToolBar = new TopToolBar(this);
+    connect(m_topToolBar, &TopToolBar::buildRequested, []() {
+        MyIDE::Core::Logger::instance().info("Build", "Build requested from top toolbar");
+    });
+}
 
-    m_debugToolbar = new DebugToolbar(m_dapClient, centralContainer);
-    topBarsLayout->addWidget(m_debugToolbar);
+void MainWindow::createSidebar() {
+    m_projectPanel = new QWidget(this);
+    auto* layout = new QVBoxLayout(m_projectPanel);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
-    centralLayout->addLayout(topBarsLayout);
+    m_projectHeader = new ToolWindowHeader("PROJECT", m_projectPanel);
+    connect(m_projectHeader, &ToolWindowHeader::closeClicked, [this]() {
+        m_projectPanel->hide();
+    });
 
-    m_navigationBar = new NavigationBar(centralContainer);
-    centralLayout->addWidget(m_navigationBar);
+    m_fileModel = new QFileSystemModel(this);
+    m_fileModel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs | QDir::Files);
 
-    m_editorTabs = new QTabWidget(centralContainer);
+    m_treeView = new QTreeView(m_projectPanel);
+    m_treeView->setModel(m_fileModel);
+    m_treeView->setItemDelegate(new ProjectItemDelegate(m_treeView));
+    m_treeView->header()->hide();
+    m_treeView->hideColumn(1);
+    m_treeView->hideColumn(2);
+    m_treeView->hideColumn(3);
+
+    m_treeView->setStyleSheet(R"(
+        QTreeView {
+            background-color: #252526;
+            color: #CCCCCC;
+            border: none;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 9pt;
+        }
+        QTreeView::item:hover {
+            background-color: #2A2D2E;
+        }
+        QTreeView::item:selected {
+            background-color: #37373D;
+            color: #FFFFFF;
+        }
+    )");
+
+    layout->addWidget(m_projectHeader);
+    layout->addWidget(m_treeView);
+
+    connect(m_treeView, &QTreeView::doubleClicked, [this](const QModelIndex& index) {
+        if (!m_fileModel->isDir(index)) {
+            QString path = m_fileModel->filePath(index);
+            openFile(path.toStdString());
+        }
+    });
+}
+
+void MainWindow::createEditorArea() {
+    m_editorTabs = new QTabWidget(this);
     m_editorTabs->setTabsClosable(true);
-    m_editorTabs->setDocumentMode(true);
-    connect(m_editorTabs, &QTabWidget::tabCloseRequested, this, &MainWindow::closeEditorTab);
-    connect(m_editorTabs, &QTabWidget::currentChanged, this, [this](int index) {
-        if (auto* ed = qobject_cast<EditorWidget*>(m_editorTabs->widget(index))) {
-            m_navigationBar->setPath(QDir::currentPath(), ed->filePath());
-            m_structurePanel->setFileSymbols(ed->filePath(), m_symbolIndex.symbolsForFile(ed->filePath()));
-        } else {
-            m_navigationBar->setPath("", "");
-            m_structurePanel->clearStructure();
+    m_editorTabs->setMovable(true);
+
+    m_editorTabs->setStyleSheet(R"(
+        QTabWidget::pane {
+            border: none;
+            background-color: #1E1E1E;
+        }
+        QTabBar::tab {
+            background-color: #2D2D2D;
+            color: #969696;
+            padding: 6px 14px;
+            border: none;
+            margin-right: 1px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 9pt;
+        }
+        QTabBar::tab:selected {
+            background-color: #1E1E1E;
+            color: #FFFFFF;
+            border-top: 2px solid #007ACC;
+        }
+        QTabBar::tab:hover {
+            background-color: #323232;
+        }
+    )");
+
+    connect(m_editorTabs, &QTabWidget::tabCloseRequested, this, &MainWindow::onTabCloseRequested);
+    connect(m_editorTabs, &QTabWidget::currentChanged, [this](int index) {
+        auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->widget(index));
+        if (editor) {
+            m_breadcrumbBar->setPathAndSymbol(editor->filePath());
         }
     });
+}
 
-    centralLayout->addWidget(m_editorTabs);
-    inner->setCentralWidget(centralContainer);
+void MainWindow::createBottomPanels() {
+    m_bottomPanel = new QWidget(this);
+    auto* layout = new QVBoxLayout(m_bottomPanel);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
-    // Left Docks: FileTree & Structure
-    m_fileTree = new FileTreePanel(inner);
-    connect(m_fileTree, &FileTreePanel::fileActivated, this, &MainWindow::openFile);
+    m_bottomHeader = new ToolWindowHeader("PROBLEMS / OUTPUT / TERMINAL", m_bottomPanel);
+    connect(m_bottomHeader, &ToolWindowHeader::closeClicked, [this]() {
+        m_bottomPanel->hide();
+    });
 
-    m_fileTreeDock = new QDockWidget(tr("Project"), inner);
-    m_fileTreeDock->setWidget(m_fileTree);
-    m_fileTreeDock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    inner->addDockWidget(Qt::LeftDockWidgetArea, m_fileTreeDock);
+    m_bottomTabs = new QTabWidget(m_bottomPanel);
 
-    m_structurePanel = new StructurePanel(inner);
-    m_structureDock = new QDockWidget(tr("Structure"), inner);
-    m_structureDock->setWidget(m_structurePanel);
-    m_structureDock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    inner->tabifyDockWidget(m_fileTreeDock, m_structureDock);
+    m_outputLog = new QPlainTextEdit(this);
+    m_outputLog->setReadOnly(true);
+    m_outputLog->setFont(QFont("Consolas", 10));
+    m_outputLog->setStyleSheet("background-color: #1E1E1E; color: #CCCCCC; border: none;");
 
-    connect(m_structurePanel, &StructurePanel::symbolSelected, this, [this](const QString& filePath, int line, int col) {
-        openFile(filePath);
-        if (auto* ed = qobject_cast<EditorWidget*>(m_editorTabs->currentWidget())) {
-            ed->gotoPosition(line, col);
+    m_problemsList = new QListWidget(this);
+    m_problemsList->setStyleSheet("background-color: #1E1E1E; color: #F44336; border: none;");
+
+    m_bottomTabs->addTab(m_outputLog, "Output");
+    m_bottomTabs->addTab(m_problemsList, "Problems");
+
+    m_bottomTabs->setStyleSheet(R"(
+        QTabWidget::pane {
+            border-top: 1px solid #333333;
+            background-color: #1E1E1E;
         }
-    });
-
-    // ActivityBar actions
-    m_activityBar->addActivity("📁", tr("Project Explorer"), [this] {
-        m_fileTreeDock->isVisible() ? m_fileTreeDock->hide() : m_fileTreeDock->show();
-    });
-    m_activityBar->addActivity("🌐", tr("Structure"), [this] {
-        m_structureDock->isVisible() ? m_structureDock->hide() : m_structureDock->show();
-    });
-    m_activityBar->addActivity("🌿", tr("Git VCS"), [this] {
-        m_gitDock->isVisible() ? m_gitDock->hide() : m_gitDock->show();
-    });
-    m_activityBar->addActivity("💻", tr("Terminal"), [this] {
-        m_terminalDock->isVisible() ? m_terminalDock->hide() : m_terminalDock->show();
-    });
-    m_activityBar->addActivity("⚠️", tr("Problems"), [this] {
-        m_problemsDock->isVisible() ? m_problemsDock->hide() : m_problemsDock->show();
-    });
-
-    // Right Docks: Variables & CallStack
-    m_variablesPanel = new VariablesPanel(inner);
-    m_variablesDock = new QDockWidget(tr("Variables"), inner);
-    m_variablesDock->setWidget(m_variablesPanel);
-    m_variablesDock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    inner->addDockWidget(Qt::RightDockWidgetArea, m_variablesDock);
-
-    m_callStackPanel = new CallStackPanel(inner);
-    m_callStackDock = new QDockWidget(tr("Call Stack"), inner);
-    m_callStackDock->setWidget(m_callStackPanel);
-    m_callStackDock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    inner->tabifyDockWidget(m_variablesDock, m_callStackDock);
-
-    // Bottom Docks: Output, Terminal, Problems, Git, TestRunner
-    m_outputPanel = new OutputPanel(inner);
-    m_outputDock = new QDockWidget(tr("Output"), inner);
-    m_outputDock->setWidget(m_outputPanel);
-    m_outputDock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    inner->addDockWidget(Qt::BottomDockWidgetArea, m_outputDock);
-
-    m_terminalPanel = new TerminalPanel(inner);
-    m_terminalDock = new QDockWidget(tr("Terminal"), inner);
-    m_terminalDock->setWidget(m_terminalPanel);
-    m_terminalDock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    inner->tabifyDockWidget(m_outputDock, m_terminalDock);
-
-    m_problemsPanel = new ProblemsPanel(inner);
-    m_problemsDock = new QDockWidget(tr("Problems"), inner);
-    m_problemsDock->setWidget(m_problemsPanel);
-    m_problemsDock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    inner->tabifyDockWidget(m_outputDock, m_problemsDock);
-
-    m_gitPanel = new GitPanel(m_gitManager, inner);
-    m_gitDock = new QDockWidget(tr("Git"), inner);
-    m_gitDock->setWidget(m_gitPanel);
-    m_gitDock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    inner->tabifyDockWidget(m_outputDock, m_gitDock);
-
-    m_testPanel = new TestRunnerPanel(inner);
-    m_testDock = new QDockWidget(tr("Test Runner"), inner);
-    m_testDock->setWidget(m_testPanel);
-    m_testDock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    inner->tabifyDockWidget(m_outputDock, m_testDock);
-
-    connect(m_problemsPanel, &ProblemsPanel::problemSelected, this, [this](const QString& filePath, int line, int col) {
-        openFile(filePath);
-        if (auto* editor = qobject_cast<EditorWidget*>(m_editorTabs->currentWidget())) {
-            editor->gotoPosition(line, col);
+        QTabBar::tab {
+            background-color: #252526;
+            color: #969696;
+            padding: 4px 10px;
+            font-size: 9pt;
         }
-    });
-
-    inner->resizeDocks({m_fileTreeDock, m_structureDock}, {260, 260}, Qt::Horizontal);
-    inner->resizeDocks({m_outputDock, m_terminalDock, m_problemsDock, m_gitDock, m_testDock}, {180, 180, 180, 180, 180}, Qt::Vertical);
-
-    m_outputPanel->appendLine(tr("MyIDE initialized with JetBrains Rider New UI visual design."));
-
-    // Indexer signals
-    connect(m_symbolIndexer, &SymbolIndexer::indexingStarted, this, [this] {
-        m_outputPanel->appendLine(tr("Indexing project symbols in background..."));
-    });
-
-    connect(m_symbolIndexer, &SymbolIndexer::indexingFinished, this, [this](int totalSymbols) {
-        m_outputPanel->appendLine(tr("Symbol indexing complete. %1 symbols indexed.").arg(totalSymbols));
-        if (auto* ed = qobject_cast<EditorWidget*>(m_editorTabs->currentWidget())) {
-            m_structurePanel->setFileSymbols(ed->filePath(), m_symbolIndex.symbolsForFile(ed->filePath()));
+        QTabBar::tab:selected {
+            background-color: #1E1E1E;
+            color: #FFFFFF;
         }
+    )");
+
+    layout->addWidget(m_bottomHeader);
+    layout->addWidget(m_bottomTabs);
+}
+
+void MainWindow::createStatusBar() {
+    QStatusBar* sb = statusBar();
+
+    m_gitLabel = new QLabel("Git: main", this);
+    m_statusLabel = new QLabel("Ready", this);
+    m_cursorPosLabel = new QLabel("Ln 1, Col 1", this);
+    m_lspStatusLabel = new QLabel("clangd: Offline", this);
+
+    sb->addWidget(m_gitLabel);
+    sb->addWidget(new QLabel("  |  ", this));
+    sb->addWidget(m_statusLabel, 1);
+
+    sb->addPermanentWidget(new QLabel("C++  |  UTF-8  |  LF  |  ", this));
+    sb->addPermanentWidget(m_cursorPosLabel);
+    sb->addPermanentWidget(new QLabel("  |  ", this));
+    sb->addPermanentWidget(m_lspStatusLabel);
+
+    sb->setStyleSheet("QStatusBar { background-color: #252526; border-top: 1px solid #2D2D2D; color: #999999; font-size: 9pt; }");
+}
+
+void MainWindow::applyDarkTheme() {
+    qApp->setPalette(ThemeManager::instance().darkPalette());
+    qApp->setStyleSheet(ThemeManager::instance().globalStyleSheet());
+}
+
+void MainWindow::openFile(const std::filesystem::path& path) {
+    auto* doc = Editor::DocumentManager::instance().openDocument(path);
+    if (!doc) return;
+
+    // Check if tab already exists
+    for (int i = 0; i < m_editorTabs->count(); ++i) {
+        auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->widget(i));
+        if (editor && editor->documentModel() == doc) {
+            m_editorTabs->setCurrentIndex(i);
+            m_breadcrumbBar->setPathAndSymbol(path);
+            return;
+        }
+    }
+
+    auto* editor = new Editor::EditorWidget(doc, this);
+    int tabIndex = m_editorTabs->addTab(editor, doc->fileName());
+    m_editorTabs->setCurrentIndex(tabIndex);
+    m_breadcrumbBar->setPathAndSymbol(path);
+
+    connect(editor, &Editor::EditorWidget::completionRequested, this, &MainWindow::onCompletionRequested);
+    connect(editor, &QPlainTextEdit::cursorPositionChanged, [this, editor]() {
+        QTextCursor c = editor->textCursor();
+        m_cursorPosLabel->setText(QString("Ln %1, Col %2").arg(c.blockNumber() + 1).arg(c.positionInBlock() + 1));
     });
 
-    // LSP Client Setup
-    m_lspClient = new LspClient(this);
+    m_lspClient->didOpen(path, doc->content());
 
-    connect(m_lspClient, &LspClient::serverStarted, this, [this] {
-        m_statusBar->setLspStatus("clangd connected", true);
-        m_outputPanel->appendLine(tr("[LSP] clangd process started."));
+    connect(doc, &Editor::Document::contentChanged, [this, path, doc](const QString& text, int ver) {
+        m_lspClient->didChange(path, text, ver);
     });
+}
 
-    connect(m_lspClient, &LspClient::serverError, this, [this](const QString& err) {
-        m_statusBar->setLspStatus("clangd error", false);
-        m_outputPanel->appendLine(tr("[LSP ERROR] %1").arg(err));
-    });
+void MainWindow::openFolder(const std::filesystem::path& path) {
+    if (!Project::ProjectManager::instance().openProject(path)) return;
 
-    connect(m_lspClient, &LspClient::initialized, this, [this] {
-        m_outputPanel->appendLine(tr("[LSP] Handshake initialized. Registering open files..."));
-        for (int i = 0; i < m_editorTabs->count(); ++i) {
-            if (auto* ed = qobject_cast<EditorWidget*>(m_editorTabs->widget(i))) {
-                QFile f(ed->filePath());
-                if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                    m_lspClient->didOpen(ed->filePath(), QString::fromUtf8(f.readAll()));
-                }
+    QString rootPath = QString::fromStdString(path.string());
+    m_fileModel->setRootPath(rootPath);
+    m_treeView->setRootIndex(m_fileModel->index(rootPath));
+
+    m_searchDialog->setFiles(Project::ProjectManager::instance().sourceFiles());
+
+    // Launch clangd LSP server for this workspace
+    QString clangdPath = MyIDE::Core::Config::instance().clangdExecutable();
+    m_lspClient->start(clangdPath, path);
+    m_lspStatusLabel->setText("clangd: Starting...");
+}
+
+void MainWindow::onOpenFileAction() {
+    QString fileName = QFileDialog::getOpenFileName(this, "Open File", "", "C++ Files (*.cpp *.h *.hpp *.c *.cs);;All Files (*)");
+    if (!fileName.isEmpty()) {
+        openFile(fileName.toStdString());
+    }
+}
+
+void MainWindow::onOpenFolderAction() {
+    QString folder = QFileDialog::getExistingDirectory(this, "Open Project Directory");
+    if (!folder.isEmpty()) {
+        openFolder(folder.toStdString());
+    }
+}
+
+void MainWindow::onSaveAction() {
+    auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget());
+    if (editor && editor->documentModel()) {
+        editor->documentModel()->save();
+        m_lspClient->didSave(editor->filePath());
+    }
+}
+
+void MainWindow::onSaveAllAction() {
+    Editor::DocumentManager::instance().saveAll();
+}
+
+void MainWindow::onTabCloseRequested(int index) {
+    auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->widget(index));
+    if (editor && editor->documentModel()) {
+        Editor::DocumentManager::instance().closeDocument(editor->documentModel()->id());
+    }
+    m_editorTabs->removeTab(index);
+}
+
+void MainWindow::onSearchEverywhereAction() {
+    m_searchDialog->exec();
+}
+
+void MainWindow::onGoToDefinitionAction() {
+    auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget());
+    if (!editor) return;
+
+    QTextCursor cursor = editor->textCursor();
+    int line = cursor.blockNumber() + 1;
+    int col = cursor.positionInBlock();
+
+    m_lspClient->requestDefinition(editor->filePath(), line, col, [this](const std::vector<Language::LocationResult>& results) {
+        if (!results.empty()) {
+            const auto& target = results[0];
+            openFile(target.path);
+            auto* targetEditor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget());
+            if (targetEditor) {
+                targetEditor->goToLine(target.line, target.column);
             }
         }
     });
+}
 
-    connect(m_lspClient, &LspClient::diagnosticsReceived, this, [this](const QString& filePath, const QList<LspDiagnostic>& diagnostics) {
-        m_problemsPanel->setDiagnostics(filePath, diagnostics);
-        for (int i = 0; i < m_editorTabs->count(); ++i) {
-            if (auto* ed = qobject_cast<EditorWidget*>(m_editorTabs->widget(i))) {
-                if (ed->filePath() == filePath) {
-                    ed->setDiagnostics(diagnostics);
-                }
-            }
+void MainWindow::onFindReferencesAction() {
+    auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget());
+    if (!editor) return;
+
+    QTextCursor cursor = editor->textCursor();
+    int line = cursor.blockNumber() + 1;
+    int col = cursor.positionInBlock();
+
+    m_lspClient->requestReferences(editor->filePath(), line, col, [this](const std::vector<Language::LocationResult>& results) {
+        m_problemsList->clear();
+        m_bottomTabs->setCurrentIndex(1); // Show problems panel for reference results
+        for (const auto& r : results) {
+            m_problemsList->addItem(QString("Ref: %1 [%2:%3]").arg(QString::fromStdString(r.path.filename().string())).arg(r.line).arg(r.column));
         }
     });
+}
 
-    connect(m_lspClient, &LspClient::completionReady, this, [this](int reqId, const QList<LspCompletionItem>& items) {
-        Q_UNUSED(reqId);
-        if (auto* ed = qobject_cast<EditorWidget*>(m_editorTabs->currentWidget())) {
-            if (ed->completionPopup()) {
-                ed->completionPopup()->setCompletionItems(items);
-            }
-        }
-    });
-
-    applyTheme();
-
-    QString currentDir = QDir::currentPath();
-    m_fileTree->setRootPath(currentDir);
-    m_symbolIndexer->startIndexing(currentDir);
-    m_gitPanel->setRepositoryPath(currentDir);
-    startLspServer(currentDir);
+void MainWindow::toggleFocusMode() {
+    m_focusMode = !m_focusMode;
+    m_leftToolBar->setVisible(!m_focusMode);
+    m_topToolBar->setVisible(!m_focusMode);
+    m_projectPanel->setVisible(!m_focusMode);
+    m_bottomPanel->setVisible(!m_focusMode);
+    statusBar()->setVisible(!m_focusMode);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {
-    if (event->key() == Qt::Key_Shift) {
-        qint64 now = QDateTime::currentMSecsSinceEpoch();
-        if (now - m_lastShiftTime < 400) {
-            openSearchEverywhere();
-            m_lastShiftTime = 0;
-            return;
-        }
-        m_lastShiftTime = now;
-    } else if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier) && event->key() == Qt::Key_O) {
-        openSearchEverywhere();
-        return;
-    } else if (event->key() == Qt::Key_F2) {
-        renameSymbolUnderCursor();
-        return;
-    }
     QMainWindow::keyPressEvent(event);
 }
 
-void MainWindow::renameSymbolUnderCursor() {
-    auto* ed = qobject_cast<EditorWidget*>(m_editorTabs->currentWidget());
-    if (!ed) return;
+void MainWindow::onCompletionRequested(const QString& prefix, int line, int col) {
+    auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget());
+    if (!editor) return;
 
-    QTextCursor cursor = ed->textCursor();
-    cursor.select(QTextCursor::WordUnderCursor);
-    QString symbol = cursor.selectedText();
+    Language::CompletionRequestParams params;
+    params.path = editor->filePath();
+    params.line = line;
+    params.column = col;
+    params.linePrefix = prefix;
 
-    RenameDialog dialog(symbol, this);
-    if (dialog.exec() == QDialog::Accepted) {
-        QString newSym = dialog.newName();
-        if (!newSym.isEmpty() && newSym != symbol) {
-            m_outputPanel->appendLine(tr("Renaming '%1' to '%2'...").arg(symbol, newSym));
-        }
-    }
-}
-
-void MainWindow::openSearchEverywhere() {
-    SearchEverywhereDialog dialog(&m_symbolIndex, this);
-    connect(&dialog, &SearchEverywhereDialog::symbolSelected, this, [this](const SymbolItem& item) {
-        if (!item.filePath.isEmpty()) {
-            openFile(item.filePath);
-            if (auto* ed = qobject_cast<EditorWidget*>(m_editorTabs->currentWidget())) {
-                ed->gotoPosition(item.line, item.character);
-            }
-        }
+    m_completionService->requestCompletion(params, [editor](const std::vector<Editor::CompletionItemData>& items, int requestId) {
+        Q_UNUSED(requestId);
+        editor->setCompletions(items);
     });
-    dialog.exec();
 }
 
-void MainWindow::startLspServer(const QString& projectDir) {
-    if (!m_lspClient) return;
-
-    QString clangdCmd = QStandardPaths::findExecutable("clangd");
-    if (clangdCmd.isEmpty()) {
-        QString userLocal = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
-        QStringList candidates = {
-            "C:/Program Files/LLVM/bin/clangd.exe",
-            "D:/Applications/VS/VC/Tools/Llvm/x64/bin/clangd.exe",
-            userLocal + "/Microsoft/WinGet/Packages/LLVM.clangd_Microsoft.Winget.Source_8wekyb3d8bbwe/clangd_22.1.6/bin/clangd.exe"
-        };
-        for (const auto& c : candidates) {
-            if (QFile::exists(c)) {
-                clangdCmd = c;
-                break;
-            }
-        }
+void MainWindow::onDiagnosticsPublished(const std::filesystem::path& path, const std::vector<Editor::Diagnostic>& diagnostics) {
+    m_problemsList->clear();
+    for (const auto& d : diagnostics) {
+        m_problemsList->addItem(QString("%1 [%2:%3] %4").arg(QString::fromStdString(path.filename().string())).arg(d.startLine).arg(d.startColumn).arg(d.message));
     }
 
-    if (clangdCmd.isEmpty()) {
-        QString appDataLocal = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
-        QDirIterator gitIt(appDataLocal + "/Microsoft/WinGet/Packages", {"clangd.exe"}, QDir::Files, QDirIterator::Subdirectories);
-        if (gitIt.hasNext()) {
-            clangdCmd = gitIt.next();
-        }
-    }
-
-    if (clangdCmd.isEmpty()) {
-        m_outputPanel->appendLine(tr("Note: clangd executable not found. Autocomplete & semantic LSP features will activate when clangd is detected."));
-        return;
-    }
-
-    m_outputPanel->appendLine(tr("Starting clangd LSP server: %1").arg(clangdCmd));
-    QStringList args = {"--background-index", "--compile-commands-dir=" + projectDir + "/build"};
-
-    if (m_lspClient->startServer(clangdCmd, args, projectDir)) {
-        m_lspClient->initialize(projectDir);
-    }
-}
-
-void MainWindow::applyTheme() {
-    QFile themeFile(":/themes/dark.qss");
-    if (themeFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qApp->setStyleSheet(QString::fromUtf8(themeFile.readAll()));
-    }
-}
-
-void MainWindow::openFolder() {
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Folder"));
-    if (dir.isEmpty()) return;
-    m_fileTree->setRootPath(dir);
-    m_titleBar->setTitle(tr("MyIDE — %1").arg(QFileInfo(dir).fileName()));
-    m_outputPanel->appendLine(tr("Opened folder: %1").arg(dir));
-
-    m_symbolIndexer->startIndexing(dir);
-    m_gitPanel->setRepositoryPath(dir);
-    startLspServer(dir);
-}
-
-void MainWindow::openFile(const QString& path) {
     for (int i = 0; i < m_editorTabs->count(); ++i) {
-        if (auto* existing = qobject_cast<EditorWidget*>(m_editorTabs->widget(i))) {
-            if (existing->filePath() == path) {
-                m_editorTabs->setCurrentIndex(i);
-                return;
-            }
-        }
-    }
-
-    auto* editor = new EditorWidget(m_editorTabs);
-    editor->loadFile(path);
-
-    connect(editor, &EditorWidget::cursorPositionChanged, this, [this, editor] {
-        QTextCursor cursor = editor->textCursor();
-        m_statusBar->setCursorPosition(cursor.blockNumber() + 1, cursor.columnNumber() + 1);
-    });
-
-    connect(editor, &EditorWidget::completionRequested, this, [this](const QString& filePath, int line, int col) {
-        if (m_lspClient && m_lspClient->isRunning()) {
-            m_lspClient->requestCompletion(filePath, line, col);
-        }
-    });
-
-    int index = m_editorTabs->addTab(editor, QFileInfo(path).fileName());
-    m_editorTabs->setCurrentIndex(index);
-
-    m_navigationBar->setPath(QDir::currentPath(), path);
-    m_structurePanel->setFileSymbols(path, m_symbolIndex.symbolsForFile(path));
-
-    if (m_lspClient && m_lspClient->isRunning()) {
-        QFile file(path);
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            m_lspClient->didOpen(path, QString::fromUtf8(file.readAll()));
+        auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->widget(i));
+        if (editor && editor->filePath() == path) {
+            editor->setDiagnostics(diagnostics);
         }
     }
 }
 
-void MainWindow::closeEditorTab(int index) {
-    QWidget* w = m_editorTabs->widget(index);
-    m_editorTabs->removeTab(index);
-    delete w;
+void MainWindow::onLogEmitted(MyIDE::Core::LogLevel level, const QString& category, const QString& message, const QString& formattedMessage) {
+    Q_UNUSED(level);
+    Q_UNUSED(category);
+    Q_UNUSED(message);
+    m_outputLog->appendPlainText(formattedMessage);
 }
+
+} // namespace MyIDE::UI
