@@ -19,6 +19,9 @@ Logger::~Logger() {
 void Logger::init(const QString& logFilePath) {
     std::lock_guard<std::mutex> lock(m_mutex);
     if (!logFilePath.isEmpty()) {
+        if (m_logFile.is_open()) {
+            m_logFile.close();
+        }
         m_logFile.open(logFilePath.toStdString(), std::ios::out | std::ios::app);
     }
     m_initialized = true;

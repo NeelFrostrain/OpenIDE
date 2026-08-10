@@ -1,6 +1,9 @@
 #include "project/ProjectManager.h"
+#include "project/WorkspaceManager.h"
 #include "cpp/CompilationDatabase.h"
 #include "core/Logger.h"
+#include "core/Config.h"
+#include <QDateTime>
 #include <fstream>
 #include <nlohmann/json.hpp>
 
@@ -25,10 +28,28 @@ bool ProjectManager::openProject(const std::filesystem::path& projectPath) {
     ensureGitIgnoreEntries();
     detectProjectType();
     
+    // Initialize Workspace Storage & File Logging inside .ide/
+    WorkspaceManager::instance().initializeWorkspace(m_paths.ide());
+    MyIDE::Core::Logger::instance().init(QString::fromStdString((m_paths.logs() / "myide.log").string()));
+
+    MyIDE::Core::Logger::instance().info("ProjectManager", QString("PROJECT ROOT: %1").arg(QString::fromStdString(m_paths.root.string())));
+    MyIDE::Core::Logger::instance().info("ProjectManager", QString("IDE ROOT: %1").arg(QString::fromStdString(m_paths.ide().string())));
+
     // Ensure compilation database for clangd include paths & defines
-    Cpp::CompilationDatabase::instance().ensureCompilationDatabase(m_paths.root, m_paths.ide());
+    Cpp::CompilationDatabase::instance().ensureCompilationDatabase(m_paths);
 
     scanProjectFiles();
+
+    // Persist subsystem data to .ide subdirectories
+    std::vector<std::string> fileList;
+    for (const auto& f : m_files) fileList.push_back(f.string());
+
+    WorkspaceManager::instance().saveProjectState("Development Editor", "Win64", "MyGameEditor");
+    WorkspaceManager::instance().saveSymbolIndex(fileList, static_cast<int>(fileList.size() * 15));
+    WorkspaceManager::instance().saveCache("lastProjectScan", QDateTime::currentDateTime().toString(Qt::ISODate).toStdString());
+    
+    QString clangdPath = MyIDE::Core::Config::instance().clangdExecutable();
+    WorkspaceManager::instance().saveLspConfig(clangdPath.toStdString(), m_paths.root.string());
 
     emit projectOpened(m_projectName, m_projectType);
     MyIDE::Core::Logger::instance().info("ProjectManager", QString("Opened project [%1] at %2").arg(m_projectName).arg(QString::fromStdString(m_paths.root.string())));

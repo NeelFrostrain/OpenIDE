@@ -1,6 +1,7 @@
 #pragma once
 
 #include "editor/EditorWidget.h"
+#include "editor/CompletionController.h"
 #include "language/LspClient.h"
 #include "language/CompletionService.h"
 #include "core/Logger.h"
@@ -33,6 +34,10 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
+    void closeEvent(QCloseEvent* event) override;
+    void changeEvent(QEvent* event) override;
+    void moveEvent(QMoveEvent* event) override;
+    void resizeEvent(QResizeEvent* event) override;
 
 private slots:
     void onOpenFileAction();
@@ -82,6 +87,7 @@ private:
 
     Language::LspClient* m_lspClient = nullptr;
     Language::CompletionService* m_completionService = nullptr;
+    Editor::CompletionController* m_completionController = nullptr;
     SearchEverywhereDialog* m_searchDialog = nullptr;
 
     bool m_focusMode = false;

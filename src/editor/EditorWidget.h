@@ -31,6 +31,8 @@ public:
     void setDiagnostics(const std::vector<Diagnostic>& diagnostics) override;
     void setCompletions(const std::vector<CompletionItemData>& completions) override;
 
+    void setCompletionController(class CompletionController* controller) { m_completionController = controller; }
+
     void lineNumberAreaPaintEvent(QPaintEvent* event);
     int lineNumberAreaWidth();
 
@@ -42,6 +44,7 @@ protected:
     void resizeEvent(QResizeEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
+    void focusOutEvent(QFocusEvent* event) override;
 
 private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
@@ -54,6 +57,7 @@ private:
     QWidget* m_lineNumberArea = nullptr;
     Syntax::TreeSitterHighlighter* m_highlighter = nullptr;
     CompletionPopup* m_completionPopup = nullptr;
+    class CompletionController* m_completionController = nullptr;
 
     std::set<int> m_breakpoints;
     std::vector<Diagnostic> m_diagnostics;

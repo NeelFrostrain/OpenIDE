@@ -1,10 +1,28 @@
 #include "syntax/TreeSitterHighlighter.h"
+#include "ui/ThemeManager.h"
 #include "core/Logger.h"
 #include <QColor>
 #include <QFont>
 #include <cstring>
+#include <unordered_set>
 
 namespace MyIDE::Syntax {
+
+static const std::unordered_set<std::string> s_keywords = {
+    "class", "struct", "enum", "namespace", "template", "typename", "using",
+    "public", "private", "protected", "virtual", "override", "const", "constexpr",
+    "static", "inline", "extern", "mutable", "volatile", "auto", "decltype",
+    "if", "else", "for", "while", "do", "switch", "case", "default", "return",
+    "break", "continue", "new", "delete", "sizeof", "alignof", "noexcept", "throw",
+    "try", "catch", "this", "nullptr", "true", "false", "void", "int", "float",
+    "double", "bool", "char", "short", "long", "unsigned", "signed", "int32_t", "uint32_t"
+};
+
+static const std::unordered_set<std::string> s_unrealMacros = {
+    "UCLASS", "USTRUCT", "UENUM", "UFUNCTION", "UPROPERTY", "UPARAM", "UMETA", "UINTERFACE",
+    "GENERATED_BODY", "GENERATED_UCLASS_BODY", "IMPLEMENT_PRIMARY_GAME_MODULE",
+    "DECLARE_DYNAMIC_MULTICAST_DELEGATE", "DECLARE_DYNAMIC_DELEGATE", "DECLARE_MULTICAST_DELEGATE"
+};
 
 TreeSitterHighlighter::TreeSitterHighlighter(QTextDocument* parent)
     : QSyntaxHighlighter(parent) {
@@ -12,51 +30,6 @@ TreeSitterHighlighter::TreeSitterHighlighter(QTextDocument* parent)
     if (m_parser) {
         ts_parser_set_language(m_parser, tree_sitter_cpp());
     }
-
-    // Color definitions
-    QTextCharFormat keywordFmt;
-    keywordFmt.setForeground(QColor("#569CD6"));
-    keywordFmt.setFontWeight(QFont::Bold);
-
-    QTextCharFormat typeFmt;
-    typeFmt.setForeground(QColor("#4EC9B0"));
-
-    QTextCharFormat funcFmt;
-    funcFmt.setForeground(QColor("#DCDCAA"));
-
-    QTextCharFormat stringFmt;
-    stringFmt.setForeground(QColor("#CE9178"));
-
-    QTextCharFormat numberFmt;
-    numberFmt.setForeground(QColor("#B5CEA8"));
-
-    QTextCharFormat commentFmt;
-    commentFmt.setForeground(QColor("#6A9955"));
-    commentFmt.setFontItalic(true);
-
-    QTextCharFormat macroFmt;
-    macroFmt.setForeground(QColor("#C586C0"));
-    macroFmt.setFontWeight(QFont::Bold);
-
-    // Cache rules
-    m_formatCache["primitive_type"] = typeFmt;
-    m_formatCache["type_identifier"] = typeFmt;
-    m_formatCache["struct_specifier"] = typeFmt;
-    m_formatCache["class_specifier"] = typeFmt;
-
-    m_formatCache["function_declarator"] = funcFmt;
-    m_formatCache["call_expression"] = funcFmt;
-    m_formatCache["field_identifier"] = funcFmt;
-
-    m_formatCache["string_literal"] = stringFmt;
-    m_formatCache["char_literal"] = stringFmt;
-    m_formatCache["number_literal"] = numberFmt;
-
-    m_formatCache["comment"] = commentFmt;
-
-    m_formatCache["preproc_include"] = macroFmt;
-    m_formatCache["preproc_def"] = macroFmt;
-    m_formatCache["preproc_function_def"] = macroFmt;
 }
 
 TreeSitterHighlighter::~TreeSitterHighlighter() {
@@ -85,73 +58,141 @@ void TreeSitterHighlighter::parseFullDocument() {
 }
 
 void TreeSitterHighlighter::highlightBlock(const QString& text) {
+    Q_UNUSED(text);
     if (!m_parser) return;
 
     parseFullDocument();
     if (!m_tree) return;
 
-    int blockStartPos = currentBlock().position();
-    int blockLength = text.length();
+    uint32_t blockStart = static_cast<uint32_t>(currentBlock().position());
+    uint32_t blockEnd = blockStart + static_cast<uint32_t>(currentBlock().length());
 
     TSNode rootNode = ts_tree_root_node(m_tree);
-    
-    // Traverse AST nodes overlapping this block range
-    uint32_t startByte = static_cast<uint32_t>(blockStartPos);
-    uint32_t endByte = static_cast<uint32_t>(blockStartPos + blockLength);
-
-    TSNode descendant = ts_node_descendant_for_byte_range(rootNode, startByte, endByte);
-    if (!ts_node_is_null(descendant)) {
-        highlightNode(descendant, QString::fromStdString(m_cachedSource));
-    }
+    traverseAndHighlight(rootNode, blockStart, blockEnd);
 }
 
-void TreeSitterHighlighter::highlightNode(TSNode node, const QString& fullText) {
-    uint32_t startByte = ts_node_start_byte(node);
-    uint32_t endByte = ts_node_end_byte(node);
-    int blockStart = currentBlock().position();
-    int blockLen = currentBlock().length();
+void TreeSitterHighlighter::traverseAndHighlight(TSNode node, uint32_t blockStart, uint32_t blockEnd) {
+    uint32_t nodeStart = ts_node_start_byte(node);
+    uint32_t nodeEnd = ts_node_end_byte(node);
 
-    const char* type = ts_node_type(node);
-    QTextCharFormat fmt = formatForNodeType(type);
+    // Overlap check
+    if (nodeEnd <= blockStart || nodeStart >= blockEnd) {
+        return;
+    }
 
-    if (fmt.isValid() && startByte >= static_cast<uint32_t>(blockStart) && endByte <= static_cast<uint32_t>(blockStart + blockLen)) {
-        setFormat(startByte - blockStart, endByte - startByte, fmt);
+    QTextCharFormat fmt = determineFormat(node);
+    if (fmt.isValid()) {
+        uint32_t highlightStart = std::max(nodeStart, blockStart);
+        uint32_t highlightEnd = std::min(nodeEnd, blockEnd);
+
+        if (highlightEnd > highlightStart) {
+            int relStart = static_cast<int>(highlightStart - blockStart);
+            int len = static_cast<int>(highlightEnd - highlightStart);
+            setFormat(relStart, len, fmt);
+        }
     }
 
     uint32_t childCount = ts_node_child_count(node);
     for (uint32_t i = 0; i < childCount; ++i) {
         TSNode child = ts_node_child(node, i);
-        highlightNode(child, fullText);
+        traverseAndHighlight(child, blockStart, blockEnd);
     }
 }
 
-QTextCharFormat TreeSitterHighlighter::formatForNodeType(const char* type) const {
-    if (!type) return {};
-    auto it = m_formatCache.find(type);
-    if (it != m_formatCache.end()) {
-        return it->second;
+QTextCharFormat TreeSitterHighlighter::determineFormat(TSNode node) const {
+    const char* typeStr = ts_node_type(node);
+    if (!typeStr) return {};
+
+    std::string type(typeStr);
+
+    const auto& colors = UI::ThemeManager::instance().colors();
+
+    // 1. Comments
+    if (type == "comment") {
+        QTextCharFormat fmt;
+        fmt.setForeground(colors.comment);
+        fmt.setFontItalic(true);
+        return fmt;
     }
 
-    // Default fallback keywords checking
-    static const std::unordered_map<std::string, QTextCharFormat> keywords = {
-        {"class", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); f.setFontWeight(QFont::Bold); return f; }() },
-        {"struct", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); f.setFontWeight(QFont::Bold); return f; }() },
-        {"public", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); return f; }() },
-        {"private", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); return f; }() },
-        {"protected", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); return f; }() },
-        {"override", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); return f; }() },
-        {"virtual", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); return f; }() },
-        {"void", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); return f; }() },
-        {"int", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); return f; }() },
-        {"float", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); return f; }() },
-        {"double", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); return f; }() },
-        {"bool", []{ QTextCharFormat f; f.setForeground(QColor("#569CD6")); return f; }() },
-        {"return", []{ QTextCharFormat f; f.setForeground(QColor("#D8A0DF")); f.setFontWeight(QFont::Bold); return f; }() },
-    };
+    // 2. Strings & Character Literals
+    if (type == "string_literal" || type == "char_literal" || type == "system_lib_string" || type == "raw_string_literal") {
+        QTextCharFormat fmt;
+        fmt.setForeground(colors.string);
+        return fmt;
+    }
 
-    auto kwIt = keywords.find(type);
-    if (kwIt != keywords.end()) {
-        return kwIt->second;
+    // 3. Numbers
+    if (type == "number_literal") {
+        QTextCharFormat fmt;
+        fmt.setForeground(colors.number);
+        return fmt;
+    }
+
+    // 4. Preprocessor Directive Keywords (#include, #define, etc.)
+    if (type == "#include" || type == "#define" || type == "#if" || type == "#ifdef" || type == "#ifndef" || type == "#else" || type == "#elif" || type == "#endif" || type == "#pragma") {
+        QTextCharFormat fmt;
+        fmt.setForeground(colors.macro);
+        fmt.setFontWeight(QFont::Bold);
+        return fmt;
+    }
+
+    // 5. Types
+    if (type == "primitive_type" || type == "type_identifier" || type == "struct_specifier" || type == "class_specifier" || type == "enum_specifier") {
+        QTextCharFormat fmt;
+        fmt.setForeground(colors.type);
+        return fmt;
+    }
+
+    // 6. Keywords
+    if (s_keywords.count(type)) {
+        QTextCharFormat fmt;
+        fmt.setForeground(colors.keyword);
+        fmt.setFontWeight(QFont::Bold);
+        return fmt;
+    }
+
+    // Node content checking for identifiers
+    uint32_t startByte = ts_node_start_byte(node);
+    uint32_t endByte = ts_node_end_byte(node);
+    if (endByte > startByte && endByte <= m_cachedSource.length()) {
+        std::string tokenText = m_cachedSource.substr(startByte, endByte - startByte);
+
+        // Keywords check by text token
+        if (s_keywords.count(tokenText)) {
+            QTextCharFormat fmt;
+            fmt.setForeground(colors.keyword);
+            fmt.setFontWeight(QFont::Bold);
+            return fmt;
+        }
+
+        // Unreal Macros check (UCLASS, UPROPERTY, UFUNCTION, GENERATED_BODY)
+        if (s_unrealMacros.count(tokenText) || tokenText.rfind("UCLASS", 0) == 0 || tokenText.rfind("UPROPERTY", 0) == 0 || tokenText.rfind("UFUNCTION", 0) == 0 || tokenText.rfind("GENERATED_BODY", 0) == 0) {
+            QTextCharFormat fmt;
+            fmt.setForeground(colors.macro);
+            fmt.setFontWeight(QFont::Bold);
+            return fmt;
+        }
+    }
+
+    // 7. Functions & Methods (Identifiers inside function declarator or call expression)
+    if (type == "identifier" || type == "field_identifier") {
+        TSNode parent = ts_node_parent(node);
+        if (!ts_node_is_null(parent)) {
+            const char* parentType = ts_node_type(parent);
+            if (parentType) {
+                std::string pType(parentType);
+                if (pType == "function_declarator" || pType == "call_expression" || pType == "function_definition") {
+                    QTextCharFormat fmt;
+                    fmt.setForeground(colors.function);
+                    return fmt;
+                } else if (pType == "field_declaration") {
+                    QTextCharFormat fmt;
+                    fmt.setForeground(QColor("#9CDCFE"));
+                    return fmt;
+                }
+            }
+        }
     }
 
     return {};

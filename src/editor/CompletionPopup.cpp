@@ -96,6 +96,42 @@ void CompletionPopup::filter(const QString& prefix) {
     }
 }
 
+void CompletionPopup::moveSelectionUp() {
+    int row = m_listWidget->currentRow();
+    if (row > 0) {
+        m_listWidget->setCurrentRow(row - 1);
+    }
+}
+
+void CompletionPopup::moveSelectionDown() {
+    int row = m_listWidget->currentRow();
+    if (row < m_listWidget->count() - 1) {
+        m_listWidget->setCurrentRow(row + 1);
+    }
+}
+
+void CompletionPopup::moveSelectionPageUp() {
+    int row = qMax(0, m_listWidget->currentRow() - 5);
+    m_listWidget->setCurrentRow(row);
+}
+
+void CompletionPopup::moveSelectionPageDown() {
+    int row = qMin(m_listWidget->count() - 1, m_listWidget->currentRow() + 5);
+    m_listWidget->setCurrentRow(row);
+}
+
+void CompletionPopup::selectHome() {
+    if (m_listWidget->count() > 0) {
+        m_listWidget->setCurrentRow(0);
+    }
+}
+
+void CompletionPopup::selectEnd() {
+    if (m_listWidget->count() > 0) {
+        m_listWidget->setCurrentRow(m_listWidget->count() - 1);
+    }
+}
+
 bool CompletionPopup::hasItems() const {
     return m_listWidget->count() > 0;
 }

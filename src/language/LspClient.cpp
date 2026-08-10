@@ -24,8 +24,9 @@ LspClient::~LspClient() {
 
 bool LspClient::start(const QString& clangdPath, const std::filesystem::path& workspaceRoot) {
     m_workspaceRoot = workspaceRoot;
+    std::filesystem::path lspDir = workspaceRoot / ".ide" / "lsp";
     QStringList args = {
-        QString("--compile-commands-dir=%1").arg(QString::fromStdString(workspaceRoot.string())),
+        QString("--compile-commands-dir=%1").arg(QString::fromStdString(lspDir.string())),
         "--header-insertion=never",
         "--completion-style=detailed",
         "--clang-tidy",

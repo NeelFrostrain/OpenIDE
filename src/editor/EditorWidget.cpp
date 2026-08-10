@@ -1,4 +1,5 @@
 #include "editor/EditorWidget.h"
+#include "editor/CompletionController.h"
 #include "core/Logger.h"
 #include <QPainter>
 #include <QTextBlock>
@@ -211,18 +212,18 @@ void EditorWidget::mousePressEvent(QMouseEvent* event) {
     QPlainTextEdit::mousePressEvent(event);
 }
 
-void EditorWidget::keyPressEvent(QKeyEvent* event) {
-    // If completion popup is visible, forward navigation/insertion keys to it
+void EditorWidget::focusOutEvent(QFocusEvent* event) {
     if (m_completionPopup && m_completionPopup->isVisible()) {
-        if (event->key() == Qt::Key_Down || event->key() == Qt::Key_Up ||
-            event->key() == Qt::Key_PageDown || event->key() == Qt::Key_PageUp ||
-            event->key() == Qt::Key_Return || event->key() == Qt::Key_Tab ||
-            event->key() == Qt::Key_Escape) {
+        m_completionPopup->hide();
+    }
+    QPlainTextEdit::focusOutEvent(event);
+}
 
-            QCoreApplication::sendEvent(m_completionPopup, event);
-            event->accept();
-            return;
-        }
+void EditorWidget::keyPressEvent(QKeyEvent* event) {
+    // If completion controller is active, let it handle navigation and acceptance keys first
+    if (m_completionController && m_completionController->handleKeyPress(event)) {
+        event->accept();
+        return;
     }
 
     // Ctrl + Space manual completion trigger

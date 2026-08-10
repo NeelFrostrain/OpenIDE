@@ -22,6 +22,7 @@ struct CompletionRequestParams {
     int line = 1;
     int column = 0;
     QString linePrefix;
+    QString documentText;
     CompletionTriggerKind triggerKind = CompletionTriggerKind::Invoked;
 };
 

@@ -100,12 +100,18 @@ set(SOURCES
     src/editor/EditorWidget.cpp
     src/editor/CompletionPopup.h
     src/editor/CompletionPopup.cpp
+    src/editor/CompletionController.h
+    src/editor/CompletionController.cpp
 
     # Syntax
     src/syntax/TreeSitterHighlighter.h
     src/syntax/TreeSitterHighlighter.cpp
 
     # Language (LSP & Autocomplete)
+    src/language/CompletionContext.h
+    src/language/CompletionContext.cpp
+    src/language/CompletionRanking.h
+    src/language/CompletionRanking.cpp
     src/language/CompletionService.h
     src/language/CompletionService.cpp
     src/language/LspTransport.h
@@ -116,6 +122,8 @@ set(SOURCES
     # Project
     src/project/ProjectManager.h
     src/project/ProjectManager.cpp
+    src/project/WorkspaceManager.h
+    src/project/WorkspaceManager.cpp
 
     # C++ & Unreal Intelligence
     src/cpp/CompilationDatabase.h

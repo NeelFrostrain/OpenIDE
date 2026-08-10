@@ -1,5 +1,6 @@
 #pragma once
 
+#include "project/ProjectManager.h"
 #include <QString>
 #include <filesystem>
 #include <vector>
@@ -10,7 +11,7 @@ class CompilationDatabase {
 public:
     static CompilationDatabase& instance();
 
-    bool ensureCompilationDatabase(const std::filesystem::path& projectPath, const std::filesystem::path& idePath);
+    bool ensureCompilationDatabase(const Project::ProjectPaths& paths);
 
 private:
     CompilationDatabase() = default;

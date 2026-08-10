@@ -26,14 +26,12 @@ protected:
 
 private:
     void parseFullDocument();
-    void highlightNode(TSNode node, const QString& fullText);
-    QTextCharFormat formatForNodeType(const char* type) const;
+    void traverseAndHighlight(TSNode node, uint32_t blockStart, uint32_t blockEnd);
+    QTextCharFormat determineFormat(TSNode node) const;
 
     TSParser* m_parser = nullptr;
     TSTree* m_tree = nullptr;
     std::string m_cachedSource;
-
-    std::unordered_map<std::string, QTextCharFormat> m_formatCache;
 };
 
 } // namespace MyIDE::Syntax

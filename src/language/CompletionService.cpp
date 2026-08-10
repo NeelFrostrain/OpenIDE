@@ -1,7 +1,10 @@
 #include "language/CompletionService.h"
 #include "language/LspClient.h"
+#include "language/CompletionContext.h"
+#include "language/CompletionRanking.h"
 #include "core/Logger.h"
 #include <QRegularExpression>
+#include <QElapsedTimer>
 #include <set>
 
 namespace MyIDE::Language {
@@ -18,26 +21,40 @@ void CompletionService::requestCompletion(const CompletionRequestParams& params,
     m_latestRequestId++;
     int currentId = m_latestRequestId;
 
+    auto startTime = std::make_shared<QElapsedTimer>();
+    startTime->start();
+
+    CompletionContext ctx = ContextAnalyzer::analyze(params.linePrefix, params.triggerKind == CompletionTriggerKind::Invoked);
+
     if (!m_lspClient) {
-        callback(localWordFallback("", params.linePrefix), currentId);
+        auto fallback = localWordFallback(params.documentText, ctx.typedPrefix);
+        auto ranked = CompletionRanking::rankAndFilter(fallback, ctx);
+        callback(ranked, currentId);
         return;
     }
 
-    m_lspClient->requestCompletion(params.path, params.line, params.column, [this, currentId, params, callback](const std::vector<Editor::CompletionItemData>& items) {
+    m_lspClient->requestCompletion(params.path, params.line, params.column, [this, currentId, params, ctx, startTime, callback](const std::vector<Editor::CompletionItemData>& items) {
         // Stale request protection
         if (currentId != m_latestRequestId) {
             MyIDE::Core::Logger::instance().debug("CompletionService", QString("Discarding stale completion request #%1").arg(currentId));
             return;
         }
 
-        if (items.empty()) {
-            auto fallbackItems = localWordFallback("", params.linePrefix);
-            MyIDE::Core::Logger::instance().debug("CompletionService", QString("LSP returned 0 items. Local word fallback produced %1 items").arg(fallbackItems.size()));
-            callback(fallbackItems, currentId);
-        } else {
-            MyIDE::Core::Logger::instance().info("CompletionService", QString("Completion request #%1 produced %2 items").arg(currentId).arg(items.size()));
-            callback(items, currentId);
-        }
+        qint64 lspMs = startTime->elapsed();
+
+        std::vector<Editor::CompletionItemData> candidates = items;
+        
+        // Merge local document tokens so local variables/declarations are always present
+        auto localWords = localWordFallback(params.documentText, ctx.typedPrefix);
+        candidates.insert(candidates.end(), localWords.begin(), localWords.end());
+
+        auto ranked = CompletionRanking::rankAndFilter(candidates, ctx);
+        qint64 totalMs = startTime->elapsed();
+
+        MyIDE::Core::Logger::instance().info("Completion", QString("[Completion] TOTAL: %1 ms (LSP: %2 ms, candidates: %3, ranked: %4, prefix: '%5')")
+            .arg(totalMs).arg(lspMs).arg(candidates.size()).arg(ranked.size()).arg(ctx.typedPrefix));
+
+        callback(ranked, currentId);
     });
 }
 

@@ -25,6 +25,7 @@ public:
     std::filesystem::path state() const { return ide() / "state"; }
     std::filesystem::path workspace() const { return ide() / "workspace"; }
     std::filesystem::path temp() const { return ide() / "tmp"; }
+    std::filesystem::path compileCommandsFile() const { return lsp() / "compile_commands.json"; }
 };
 
 class ProjectManager : public QObject {

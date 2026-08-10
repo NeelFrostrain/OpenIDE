@@ -19,6 +19,13 @@ public:
     void setCompletions(const std::vector<CompletionItemData>& items);
     void filter(const QString& prefix);
 
+    void moveSelectionUp();
+    void moveSelectionDown();
+    void moveSelectionPageUp();
+    void moveSelectionPageDown();
+    void selectHome();
+    void selectEnd();
+
     CompletionItemData currentItemData() const;
     bool hasItems() const;
 

@@ -1,6 +1,7 @@
 #include "ui/MainWindow.h"
 #include "editor/DocumentManager.h"
 #include "project/ProjectManager.h"
+#include "project/WorkspaceManager.h"
 #include "core/Config.h"
 #include "core/Logger.h"
 #include <QMenuBar>
@@ -24,6 +25,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     m_lspClient = new Language::LspClient(this);
     m_completionService = new Language::CompletionService(m_lspClient, this);
+    m_completionController = new Editor::CompletionController(m_completionService, this);
     m_searchDialog = new SearchEverywhereDialog(this);
 
     connect(&MyIDE::Core::Logger::instance(), &MyIDE::Core::Logger::logEmitted, this, &MainWindow::onLogEmitted);
@@ -103,6 +105,9 @@ MainWindow::MainWindow(QWidget* parent)
     });
 
     MyIDE::Core::Logger::instance().info("UI", "MainWindow initialized with JetBrains Native IDE UI");
+
+    // Open current working directory project workspace by default
+    openFolder(std::filesystem::current_path());
 }
 
 MainWindow::~MainWindow() {
@@ -255,6 +260,9 @@ void MainWindow::createEditorArea() {
         auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->widget(index));
         if (editor) {
             m_breadcrumbBar->setPathAndSymbol(editor->filePath());
+            m_completionController->attachEditor(editor);
+        } else {
+            m_completionController->detachEditor();
         }
     });
 }
@@ -347,6 +355,7 @@ void MainWindow::openFile(const std::filesystem::path& path) {
     int tabIndex = m_editorTabs->addTab(editor, doc->fileName());
     m_editorTabs->setCurrentIndex(tabIndex);
     m_breadcrumbBar->setPathAndSymbol(path);
+    m_completionController->attachEditor(editor);
 
     connect(editor, &Editor::EditorWidget::completionRequested, this, &MainWindow::onCompletionRequested);
     connect(editor, &QPlainTextEdit::cursorPositionChanged, [this, editor]() {
@@ -374,6 +383,22 @@ void MainWindow::openFolder(const std::filesystem::path& path) {
     QString clangdPath = MyIDE::Core::Config::instance().clangdExecutable();
     m_lspClient->start(clangdPath, path);
     m_lspStatusLabel->setText("clangd: Starting...");
+
+    // Restore workspace state from .ide/workspace/workspace.json
+    auto state = Project::WorkspaceManager::instance().loadWorkspace();
+    for (const auto& fileStr : state.openFiles) {
+        if (std::filesystem::exists(fileStr)) {
+            openFile(fileStr);
+            auto it = state.cursorPositions.find(fileStr);
+            if (it != state.cursorPositions.end()) {
+                auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget());
+                if (editor) editor->goToLine(it->second.line, it->second.column);
+            }
+        }
+    }
+    if (!state.activeFile.empty() && std::filesystem::exists(state.activeFile)) {
+        openFile(state.activeFile);
+    }
 }
 
 void MainWindow::onOpenFileAction() {
@@ -464,20 +489,63 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
     QMainWindow::keyPressEvent(event);
 }
 
+void MainWindow::closeEvent(QCloseEvent* event) {
+    Project::WorkspaceState state;
+    state.version = 1;
+
+    auto* currentEditor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget());
+    if (currentEditor) {
+        state.activeFile = currentEditor->filePath().string();
+    }
+
+    for (int i = 0; i < m_editorTabs->count(); ++i) {
+        auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->widget(i));
+        if (editor) {
+            std::string pathStr = editor->filePath().string();
+            state.openFiles.push_back(pathStr);
+            QTextCursor c = editor->textCursor();
+            state.cursorPositions[pathStr] = {c.blockNumber() + 1, c.positionInBlock() + 1};
+        }
+    }
+
+    if (m_completionController) {
+        m_completionController->cancelSession(Editor::CancelReason::WindowMinimized);
+    }
+
+    Project::WorkspaceManager::instance().saveWorkspace(state);
+    QMainWindow::closeEvent(event);
+}
+
+void MainWindow::changeEvent(QEvent* event) {
+    if (event->type() == QEvent::WindowStateChange) {
+        if (isMinimized() && m_completionController) {
+            m_completionController->cancelSession(Editor::CancelReason::WindowMinimized);
+        }
+    }
+    QMainWindow::changeEvent(event);
+}
+
+void MainWindow::moveEvent(QMoveEvent* event) {
+    if (m_completionController && m_completionController->isSessionActive()) {
+        m_completionController->cancelSession(Editor::CancelReason::CursorMoved);
+    }
+    QMainWindow::moveEvent(event);
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event) {
+    if (m_completionController && m_completionController->isSessionActive()) {
+        m_completionController->cancelSession(Editor::CancelReason::CursorMoved);
+    }
+    QMainWindow::resizeEvent(event);
+}
+
 void MainWindow::onCompletionRequested(const QString& prefix, int line, int col) {
-    auto* editor = qobject_cast<Editor::EditorWidget*>(m_editorTabs->currentWidget());
-    if (!editor) return;
-
-    Language::CompletionRequestParams params;
-    params.path = editor->filePath();
-    params.line = line;
-    params.column = col;
-    params.linePrefix = prefix;
-
-    m_completionService->requestCompletion(params, [editor](const std::vector<Editor::CompletionItemData>& items, int requestId) {
-        Q_UNUSED(requestId);
-        editor->setCompletions(items);
-    });
+    Q_UNUSED(prefix);
+    Q_UNUSED(line);
+    Q_UNUSED(col);
+    if (m_completionController) {
+        m_completionController->triggerCompletion(false);
+    }
 }
 
 void MainWindow::onDiagnosticsPublished(const std::filesystem::path& path, const std::vector<Editor::Diagnostic>& diagnostics) {

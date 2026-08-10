@@ -16,6 +16,14 @@ struct Diagnostic {
     QString source;
 };
 
+enum class CompletionSource {
+    Clangd,
+    Keyword,
+    LocalSymbol,
+    Snippet,
+    ProjectIndex
+};
+
 struct CompletionItemData {
     QString label;
     QString detail;
@@ -23,6 +31,7 @@ struct CompletionItemData {
     QString insertText;
     int kind = 0;
     bool isSnippet = false;
+    CompletionSource source = CompletionSource::Clangd;
 };
 
 class ITextEditor {
