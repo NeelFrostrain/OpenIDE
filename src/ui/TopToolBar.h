@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QComboBox>
 #include <QPushButton>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 class TopToolBar : public QWidget {
     Q_OBJECT
@@ -27,4 +27,4 @@ private:
     QPushButton* m_debugBtn = nullptr;
 };
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

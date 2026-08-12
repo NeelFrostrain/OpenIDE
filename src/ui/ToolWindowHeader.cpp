@@ -1,6 +1,6 @@
-#include "ui/ToolWindowHeader.h"
+﻿#include "ui/ToolWindowHeader.h"
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 ToolWindowHeader::ToolWindowHeader(const QString& title, QWidget* parent)
     : QWidget(parent) {
@@ -53,4 +53,4 @@ void ToolWindowHeader::setTitle(const QString& title) {
     m_titleLabel->setText(title.toUpper());
 }
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

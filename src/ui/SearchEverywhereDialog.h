@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <QDialog>
 #include <QLineEdit>
@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <vector>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 struct SearchResultItem {
     QString title;
@@ -45,4 +45,4 @@ private:
     std::vector<SearchResultItem> m_currentResults;
 };
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

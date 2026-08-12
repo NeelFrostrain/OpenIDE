@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/snippets/SnippetDefinition.h"
 #include "editor/snippets/SnippetRegistry.h"
@@ -7,7 +7,7 @@
 #include <QPlainTextEdit>
 #include <memory>
 
-namespace MyIDE::Editor::Snippets {
+namespace OpenIDE::Editor::Snippets {
 
 class SnippetEngine : public QObject {
     Q_OBJECT
@@ -28,4 +28,4 @@ private:
     std::unique_ptr<SnippetSession> m_activeSession;
 };
 
-} // namespace MyIDE::Editor::Snippets
+} // namespace OpenIDE::Editor::Snippets

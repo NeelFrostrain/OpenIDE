@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/EditorWidget.h"
 #include "editor/CompletionController.h"
@@ -21,7 +21,7 @@
 #include <QLabel>
 #include <QListWidget>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -53,7 +53,7 @@ private slots:
 
     void onCompletionRequested(const QString& prefix, int line, int col);
     void onDiagnosticsPublished(const std::filesystem::path& path, const std::vector<Editor::Diagnostic>& diagnostics);
-    void onLogEmitted(MyIDE::Core::LogLevel level, const QString& category, const QString& message, const QString& formattedMessage);
+    void onLogEmitted(OpenIDE::Core::LogLevel level, const QString& category, const QString& message, const QString& formattedMessage);
 
 private:
     void createMenuBar();
@@ -94,4 +94,4 @@ private:
     bool m_focusMode = false;
 };
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

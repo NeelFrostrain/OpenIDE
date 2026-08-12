@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <QWidget>
 #include <QHBoxLayout>
@@ -8,7 +8,7 @@
 #include <vector>
 #include <QString>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 struct BreadcrumbItem {
     QString name;
@@ -31,4 +31,4 @@ private:
     QHBoxLayout* m_layout = nullptr;
 };
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

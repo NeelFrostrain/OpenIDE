@@ -1,9 +1,9 @@
-#include "editor/snippets/SnippetEngine.h"
+﻿#include "editor/snippets/SnippetEngine.h"
 #include "editor/snippets/SnippetParser.h"
 #include "core/Logger.h"
 #include <QKeyEvent>
 
-namespace MyIDE::Editor::Snippets {
+namespace OpenIDE::Editor::Snippets {
 
 SnippetEngine& SnippetEngine::instance() {
     static SnippetEngine s_instance;
@@ -69,4 +69,4 @@ bool SnippetEngine::handleKeyEvent(QPlainTextEdit* editor, QKeyEvent* event) {
     return false;
 }
 
-} // namespace MyIDE::Editor::Snippets
+} // namespace OpenIDE::Editor::Snippets

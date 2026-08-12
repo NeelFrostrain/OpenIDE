@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/ITextEditor.h"
 #include "lsp/LspTypes.h"
@@ -8,7 +8,7 @@
 #include <vector>
 #include <filesystem>
 
-namespace MyIDE::Lsp {
+namespace OpenIDE::Lsp {
 
 class LspDiagnosticsManager : public QObject {
     Q_OBJECT
@@ -30,4 +30,4 @@ private:
     std::unordered_map<std::string, std::vector<Editor::Diagnostic>> m_fileDiagnostics;
 };
 
-} // namespace MyIDE::Lsp
+} // namespace OpenIDE::Lsp

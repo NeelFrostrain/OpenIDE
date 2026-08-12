@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <QString>
 #include <filesystem>
 #include <vector>
 #include <nlohmann/json.hpp>
 
-namespace MyIDE::Unreal {
+namespace OpenIDE::Unreal {
 
 struct UnrealModuleInfo {
     QString name;
@@ -36,4 +36,4 @@ private:
     UnrealProjectDetector() = default;
 };
 
-} // namespace MyIDE::Unreal
+} // namespace OpenIDE::Unreal

@@ -1,11 +1,11 @@
-#include "language/CompletionRanking.h"
+﻿#include "language/CompletionRanking.h"
 #include "language/IncludeIndex.h"
 #include "editor/snippets/SnippetRegistry.h"
 #include "core/Logger.h"
 #include <algorithm>
 #include <unordered_map>
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 std::vector<Editor::CompletionItemData> CompletionRanking::cppKeywords() {
     static const std::vector<Editor::CompletionItemData> items = []() {
@@ -183,7 +183,7 @@ std::vector<Editor::CompletionItemData> CompletionRanking::rankAndFilter(
     }
 
     if (!scored.empty()) {
-        MyIDE::Core::Logger::instance().info("CompletionRanking", QString("Ranked %1 candidates for prefix '%2' (Top score: %3 for '%4')")
+        OpenIDE::Core::Logger::instance().info("CompletionRanking", QString("Ranked %1 candidates for prefix '%2' (Top score: %3 for '%4')")
             .arg(scored.size())
             .arg(ctx.typedPrefix)
             .arg(scored[0].score)
@@ -193,4 +193,4 @@ std::vector<Editor::CompletionItemData> CompletionRanking::rankAndFilter(
     return result;
 }
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

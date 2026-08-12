@@ -1,7 +1,7 @@
-#include "language/CompletionContext.h"
+﻿#include "language/CompletionContext.h"
 #include <QRegularExpression>
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 CompletionContext ContextAnalyzer::analyze(const QString& lineBeforeCursor, bool isManual) {
     CompletionContext ctx;
@@ -59,4 +59,4 @@ CompletionContext ContextAnalyzer::analyze(const QString& lineBeforeCursor, bool
     return ctx;
 }
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

@@ -1,4 +1,4 @@
-#include "core/Config.h"
+﻿#include "core/Config.h"
 #include "core/Logger.h"
 #include <fstream>
 #include <QStandardPaths>
@@ -6,7 +6,7 @@
 #include <QProcessEnvironment>
 #include <QFileInfo>
 
-namespace MyIDE::Core {
+namespace OpenIDE::Core {
 
 Config& Config::instance() {
     static Config s_instance;
@@ -81,4 +81,4 @@ void Config::setCmakeExecutable(const QString& path) { m_cmakeExecutable = path;
 QString Config::ninjaExecutable() const { return m_ninjaExecutable; }
 void Config::setNinjaExecutable(const QString& path) { m_ninjaExecutable = path; }
 
-} // namespace MyIDE::Core
+} // namespace OpenIDE::Core

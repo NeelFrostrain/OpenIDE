@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/EditorWidget.h"
 #include "editor/CompletionPopup.h"
@@ -7,7 +7,7 @@
 #include <QObject>
 #include <filesystem>
 
-namespace MyIDE::Editor {
+namespace OpenIDE::Editor {
 
 enum class CancelReason {
     Escape,
@@ -68,4 +68,4 @@ private:
     int m_lastCol = -1;
 };
 
-} // namespace MyIDE::Editor
+} // namespace OpenIDE::Editor

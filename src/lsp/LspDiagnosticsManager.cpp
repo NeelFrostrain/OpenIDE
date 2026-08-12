@@ -1,7 +1,7 @@
-#include "lsp/LspDiagnosticsManager.h"
+﻿#include "lsp/LspDiagnosticsManager.h"
 #include "core/Logger.h"
 
-namespace MyIDE::Lsp {
+namespace OpenIDE::Lsp {
 
 LspDiagnosticsManager::LspDiagnosticsManager(QObject* parent)
     : QObject(parent) {
@@ -11,7 +11,7 @@ void LspDiagnosticsManager::publishDiagnostics(const std::filesystem::path& path
     m_fileDiagnostics[path.string()] = diagnostics;
     emit diagnosticsUpdated(path, diagnostics);
 
-    MyIDE::Core::Logger::instance().info("LspDiagnostics", QString("[LSP] Published %1 diagnostics for %2")
+    OpenIDE::Core::Logger::instance().info("LspDiagnostics", QString("[LSP] Published %1 diagnostics for %2")
         .arg(diagnostics.size())
         .arg(QString::fromStdString(path.filename().string())));
 }
@@ -48,4 +48,4 @@ int LspDiagnosticsManager::totalWarnings() const {
     return count;
 }
 
-} // namespace MyIDE::Lsp
+} // namespace OpenIDE::Lsp

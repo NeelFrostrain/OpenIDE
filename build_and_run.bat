@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 echo ===================================================
-echo   MyIDE - Clean Build ^& Run Script
+echo   OpenIDE - Clean Build ^& Run Script
 echo ===================================================
 
 :: 1. Locate Visual Studio vcvars64.bat
@@ -43,8 +43,8 @@ if %ERRORLEVEL% neq 0 (
 echo [3/5] Cleaning previous targets...
 "%CMAKE_EXE%" --build build --target clean >nul 2>&1
 
-:: 5. Compile MyIDE
-echo [4/5] Compiling MyIDE...
+:: 5. Compile OpenIDE
+echo [4/5] Compiling OpenIDE...
 "%CMAKE_EXE%" --build build
 if %ERRORLEVEL% neq 0 (
     echo [ERROR] Build failed.
@@ -52,11 +52,11 @@ if %ERRORLEVEL% neq 0 (
     exit /b %ERRORLEVEL%
 )
 
-:: 6. Launch MyIDE
-echo [5/5] Launching MyIDE.exe...
+:: 6. Launch OpenIDE
+echo [5/5] Launching OpenIDE.exe...
 set "PATH=%QT_PATH%\bin;%PATH%"
-start "" "build\MyIDE.exe"
+start "" "build\OpenIDE.exe"
 
 echo ===================================================
-echo   MyIDE Build Complete and Running!
+echo   OpenIDE Build Complete and Running!
 echo ===================================================

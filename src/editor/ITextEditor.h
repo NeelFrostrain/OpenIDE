@@ -1,10 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include <QString>
 #include <filesystem>
 #include <vector>
 
-namespace MyIDE::Editor {
+namespace OpenIDE::Editor {
 
 struct Diagnostic {
     int startLine = 0;
@@ -50,4 +50,4 @@ public:
     virtual void setCompletions(const std::vector<CompletionItemData>& completions) = 0;
 };
 
-} // namespace MyIDE::Editor
+} // namespace OpenIDE::Editor

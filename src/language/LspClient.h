@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "language/LspTransport.h"
 #include "editor/ITextEditor.h"
@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <functional>
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 struct LocationResult {
     std::filesystem::path path;
@@ -64,4 +64,4 @@ private:
     std::unordered_map<int, std::function<void(const nlohmann::json&)>> m_responseCallbacks;
 };
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

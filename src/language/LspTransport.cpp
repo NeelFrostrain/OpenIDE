@@ -1,7 +1,7 @@
-#include "language/LspTransport.h"
+﻿#include "language/LspTransport.h"
 #include "core/Logger.h"
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 LspTransport::LspTransport(QObject* parent)
     : QObject(parent) {
@@ -19,10 +19,10 @@ bool LspTransport::start(const QString& executable, const QStringList& arguments
     }
     m_process.start(executable, arguments);
     if (!m_process.waitForStarted(3000)) {
-        MyIDE::Core::Logger::instance().error("LspTransport", QString("Failed to start LSP process: %1").arg(executable));
+        OpenIDE::Core::Logger::instance().error("LspTransport", QString("Failed to start LSP process: %1").arg(executable));
         return false;
     }
-    MyIDE::Core::Logger::instance().info("LspTransport", QString("LSP server started: %1").arg(executable));
+    OpenIDE::Core::Logger::instance().info("LspTransport", QString("LSP server started: %1").arg(executable));
     return true;
 }
 
@@ -70,7 +70,7 @@ void LspTransport::onReadyRead() {
             nlohmann::json json = nlohmann::json::parse(body.toStdString());
             emit messageReceived(json);
         } catch (const std::exception& e) {
-            MyIDE::Core::Logger::instance().error("LspTransport", QString("LSP JSON Parse error: %1").arg(e.what()));
+            OpenIDE::Core::Logger::instance().error("LspTransport", QString("LSP JSON Parse error: %1").arg(e.what()));
         }
     }
 }
@@ -80,4 +80,4 @@ void LspTransport::onErrorOccurred(QProcess::ProcessError error) {
     emit errorOccurred(m_process.errorString());
 }
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

@@ -1,11 +1,11 @@
-#include "unreal/UnrealProjectDetector.h"
+﻿#include "unreal/UnrealProjectDetector.h"
 #include "language/IncludeIndex.h"
 #include "core/Logger.h"
 #include <QDir>
 #include <QSettings>
 #include <fstream>
 
-namespace MyIDE::Unreal {
+namespace OpenIDE::Unreal {
 
 UnrealProjectDetector &UnrealProjectDetector::instance() {
   static UnrealProjectDetector s_instance;
@@ -57,7 +57,7 @@ UnrealProjectDetector::detect(const std::filesystem::path &projectPath) {
     }
 
     info.enginePath = locateEngine(info.engineAssociation);
-    MyIDE::Core::Logger::instance().info(
+    OpenIDE::Core::Logger::instance().info(
         "UnrealDetector",
         QString("Detected Unreal Project [%1] Engine: %2 Path: %3")
             .arg(info.projectName)
@@ -65,7 +65,7 @@ UnrealProjectDetector::detect(const std::filesystem::path &projectPath) {
             .arg(QString::fromStdString(info.enginePath.string())));
 
   } catch (const std::exception &e) {
-    MyIDE::Core::Logger::instance().error(
+    OpenIDE::Core::Logger::instance().error(
         "UnrealDetector",
         QString("Error parsing .uproject file: %1").arg(e.what()));
   }
@@ -124,7 +124,7 @@ bool UnrealProjectDetector::generateCompileCommands(
       std::filesystem::copy_file(
           sourceCommands, outputPath,
           std::filesystem::copy_options::overwrite_existing);
-      MyIDE::Core::Logger::instance().info(
+      OpenIDE::Core::Logger::instance().info(
           "UnrealDetector",
           QString("Copied existing compile_commands.json from %1 to %2")
               .arg(QString::fromStdString(sourceCommands.string()))
@@ -199,18 +199,18 @@ bool UnrealProjectDetector::generateCompileCommands(
     std::filesystem::create_directories(outputPath.parent_path());
     std::ofstream outFile(outputPath);
     outFile << compileDb.dump(4);
-    MyIDE::Core::Logger::instance().info(
+    OpenIDE::Core::Logger::instance().info(
         "UnrealDetector",
         QString("Generated compilation database for Unreal Engine at %1 with %2 files")
             .arg(QString::fromStdString(outputPath.string()))
             .arg(compileDb.size()));
     return true;
   } catch (const std::exception &e) {
-    MyIDE::Core::Logger::instance().error(
+    OpenIDE::Core::Logger::instance().error(
         "UnrealDetector",
         QString("Failed to write compile_commands.json: %1").arg(e.what()));
     return false;
   }
 }
 
-} // namespace MyIDE::Unreal
+} // namespace OpenIDE::Unreal

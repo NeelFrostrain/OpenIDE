@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 
 #include <QString>
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 enum class ContextKind {
     GeneralCode,
@@ -26,4 +26,4 @@ public:
     static CompletionContext analyze(const QString& lineBeforeCursor, bool isManual = false);
 };
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

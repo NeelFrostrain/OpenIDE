@@ -1,4 +1,4 @@
-#include "project/ProjectIndexer.h"
+﻿#include "project/ProjectIndexer.h"
 #include "language/IncludeIndex.h"
 #include "cpp/CompilationDatabase.h"
 #include "core/Logger.h"
@@ -6,7 +6,7 @@
 #include <nlohmann/json.hpp>
 #include <QDateTime>
 
-namespace MyIDE::Project {
+namespace OpenIDE::Project {
 
 ProjectIndexer& ProjectIndexer::instance() {
     static ProjectIndexer s_instance;
@@ -28,13 +28,13 @@ void ProjectIndexer::startIndexing(const ProjectPaths& paths) {
     stopIndexing();
     m_stopRequested.store(false);
 
-    MyIDE::Core::Logger::instance().info("Indexer", QString("[Indexer] Project opened: %1").arg(QString::fromStdString(paths.root.string())));
+    OpenIDE::Core::Logger::instance().info("Indexer", QString("[Indexer] Project opened: %1").arg(QString::fromStdString(paths.root.string())));
 
     // Fast-path: Attempt to load cached index immediately from .ide/index/
     if (loadCachedIndex(paths)) {
-        MyIDE::Core::Logger::instance().info("Indexer", QString("[Indexer] Fast-path: Loaded cached index with %1 symbols").arg(m_symbolCount.load()));
+        OpenIDE::Core::Logger::instance().info("Indexer", QString("[Indexer] Fast-path: Loaded cached index with %1 symbols").arg(m_symbolCount.load()));
     } else {
-        MyIDE::Core::Logger::instance().info("Indexer", "[Indexer] No valid cache found. Starting background worker thread...");
+        OpenIDE::Core::Logger::instance().info("Indexer", "[Indexer] No valid cache found. Starting background worker thread...");
     }
 
     // Launch non-blocking background thread for project symbol validation & indexing
@@ -60,7 +60,7 @@ bool ProjectIndexer::loadCachedIndex(const ProjectPaths& paths) {
         m_symbolCount.store(sCount);
         m_isReady.store(true);
 
-        MyIDE::Core::Logger::instance().info("Indexer", QString("[Indexer] Cached index loaded: %1 files, %2 symbols")
+        OpenIDE::Core::Logger::instance().info("Indexer", QString("[Indexer] Cached index loaded: %1 files, %2 symbols")
             .arg(fCount).arg(sCount));
         emit indexingFinished(fCount, sCount);
         return true;
@@ -129,7 +129,7 @@ void ProjectIndexer::backgroundIndexingTask(ProjectPaths paths) {
             }
         }
     } catch (const std::exception& e) {
-        MyIDE::Core::Logger::instance().error("Indexer", QString("[Indexer] Background scan error: %1").arg(e.what()));
+        OpenIDE::Core::Logger::instance().error("Indexer", QString("[Indexer] Background scan error: %1").arg(e.what()));
     }
 
     if (m_stopRequested.load()) {
@@ -145,7 +145,7 @@ void ProjectIndexer::backgroundIndexingTask(ProjectPaths paths) {
     saveIndexToDisk(paths, discoveredFiles, estimatedSymbols);
     Language::IncludeIndex::instance().saveToDisk(paths.ide());
 
-    MyIDE::Core::Logger::instance().info("Indexer", QString("[Indexer] Background indexing completed: %1 source files, %2 estimated symbols")
+    OpenIDE::Core::Logger::instance().info("Indexer", QString("[Indexer] Background indexing completed: %1 source files, %2 estimated symbols")
         .arg(discoveredFiles.size()).arg(estimatedSymbols));
 
     emit indexingFinished(static_cast<int>(discoveredFiles.size()), estimatedSymbols);
@@ -157,7 +157,7 @@ void ProjectIndexer::saveIndexToDisk(const ProjectPaths& paths, const std::vecto
 
         nlohmann::json metaJson = {
             {"version", 1},
-            {"myideVersion", "0.1.0"},
+            {"OpenIDEVersion", "0.1.0"},
             {"project", paths.root.filename().string()},
             {"fileCount", files.size()},
             {"symbolCount", symbolCount},
@@ -177,12 +177,12 @@ void ProjectIndexer::saveIndexToDisk(const ProjectPaths& paths, const std::vecto
         std::ofstream symOut(symbolsFile);
         symOut << symbolsJson.dump(4);
 
-        MyIDE::Core::Logger::instance().info("Indexer", QString("[Indexer] Saved persistent index to %1 (%2 bytes)")
+        OpenIDE::Core::Logger::instance().info("Indexer", QString("[Indexer] Saved persistent index to %1 (%2 bytes)")
             .arg(QString::fromStdString(symbolsFile.string()))
             .arg(std::filesystem::file_size(symbolsFile)));
     } catch (const std::exception& e) {
-        MyIDE::Core::Logger::instance().error("Indexer", QString("[Indexer] Failed to save persistent index: %1").arg(e.what()));
+        OpenIDE::Core::Logger::instance().error("Indexer", QString("[Indexer] Failed to save persistent index: %1").arg(e.what()));
     }
 }
 
-} // namespace MyIDE::Project
+} // namespace OpenIDE::Project

@@ -1,7 +1,7 @@
-#include "ui/BreadcrumbBar.h"
+﻿#include "ui/BreadcrumbBar.h"
 #include <QStyle>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 BreadcrumbBar::BreadcrumbBar(QWidget* parent)
     : QWidget(parent) {
@@ -69,4 +69,4 @@ void BreadcrumbBar::setPathAndSymbol(const std::filesystem::path& filePath, cons
     m_layout->addStretch(1);
 }
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

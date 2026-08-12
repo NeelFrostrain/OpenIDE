@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <QString>
 #include <QObject>
 #include <filesystem>
 #include <cstdint>
 
-namespace MyIDE::Editor {
+namespace OpenIDE::Editor {
 
 using DocumentId = std::uint64_t;
 
@@ -40,4 +40,4 @@ private:
     int m_version = 0;
 };
 
-} // namespace MyIDE::Editor
+} // namespace OpenIDE::Editor

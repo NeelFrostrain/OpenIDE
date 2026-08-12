@@ -1,7 +1,7 @@
-#include "ui/ThemeManager.h"
+﻿#include "ui/ThemeManager.h"
 #include <QFontDatabase>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 ThemeManager& ThemeManager::instance() {
     static ThemeManager s_instance;
@@ -137,4 +137,4 @@ QString ThemeManager::globalStyleSheet() const {
     )";
 }
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

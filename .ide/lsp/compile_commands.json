@@ -145,6 +145,136 @@
         "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_TopToolBar.cpp"
     },
     {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\A5Q22ZIOL5\\moc_ProjectIndexer.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\A5Q22ZIOL5\\moc_ProjectIndexer.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\A5Q22ZIOL5\\moc_ProjectManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\A5Q22ZIOL5\\moc_ProjectManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspDiagnosticsManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspDiagnosticsManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspRequestManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspRequestManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspSemanticTokenManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspSemanticTokenManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_CompletionService.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_CompletionService.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_LspClient.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_LspClient.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_LspTransport.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_LspTransport.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\ISMKEKEPX5\\moc_Application.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\ISMKEKEPX5\\moc_Application.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\mocs_compilation.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\mocs_compilation.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\PRMOGMWJPH\\moc_Logger.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\PRMOGMWJPH\\moc_Logger.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\SKMTTJJW33\\moc_TreeSitterHighlighter.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\SKMTTJJW33\\moc_TreeSitterHighlighter.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_CompletionController.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_CompletionController.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_CompletionPopup.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_CompletionPopup.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_Document.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_Document.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_DocumentManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_DocumentManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_EditorWidget.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_EditorWidget.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\XPS2I2KIDW\\moc_SnippetEngine.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\XPS2I2KIDW\\moc_SnippetEngine.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_BreadcrumbBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_BreadcrumbBar.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_LeftToolBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_LeftToolBar.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_MainWindow.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_MainWindow.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_ProjectItemDelegate.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_ProjectItemDelegate.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_SearchEverywhereDialog.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_SearchEverywhereDialog.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_ToolWindowHeader.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_ToolWindowHeader.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_TopToolBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_TopToolBar.cpp"
+    },
+    {
         "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\tree_sitter_cpp_autogen\\mocs_compilation.cpp\"",
         "directory": "E:\\Projects\\nscode",
         "file": "E:\\Projects\\nscode\\build\\tree_sitter_cpp_autogen\\mocs_compilation.cpp"

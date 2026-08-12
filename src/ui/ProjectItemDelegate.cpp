@@ -1,8 +1,8 @@
-#include "ui/ProjectItemDelegate.h"
+﻿#include "ui/ProjectItemDelegate.h"
 #include <QPainter>
 #include <QFileSystemModel>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 ProjectItemDelegate::ProjectItemDelegate(QObject* parent)
     : QStyledItemDelegate(parent) {
@@ -82,4 +82,4 @@ QSize ProjectItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QM
     return QSize(220, 22);
 }
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

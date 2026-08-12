@@ -1,10 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/ITextEditor.h"
 #include "language/CompletionContext.h"
 #include <vector>
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 class CompletionRanking {
 public:
@@ -17,4 +17,4 @@ private:
     static std::vector<Editor::CompletionItemData> cppKeywords();
 };
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

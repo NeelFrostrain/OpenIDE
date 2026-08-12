@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <QString>
 #include <QUrl>
@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-namespace MyIDE::Lsp {
+namespace OpenIDE::Lsp {
 
 inline QString pathToUri(const std::filesystem::path& path) {
     return QUrl::fromLocalFile(QString::fromStdString(path.string())).toString();
@@ -58,4 +58,4 @@ struct DocumentSymbolInfo {
     std::vector<DocumentSymbolInfo> children;
 };
 
-} // namespace MyIDE::Lsp
+} // namespace OpenIDE::Lsp

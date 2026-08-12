@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 
 #include <QStyledItemDelegate>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 class ProjectItemDelegate : public QStyledItemDelegate {
     Q_OBJECT
@@ -14,4 +14,4 @@ public:
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <QString>
 #include <QObject>
@@ -6,7 +6,7 @@
 #include <fstream>
 #include <memory>
 
-namespace MyIDE::Core {
+namespace OpenIDE::Core {
 
 enum class LogLevel {
     Trace,
@@ -45,11 +45,11 @@ private:
     bool m_initialized = false;
 };
 
-} // namespace MyIDE::Core
+} // namespace OpenIDE::Core
 
-#define LOG_TRACE(cat, msg) MyIDE::Core::Logger::instance().trace(cat, msg)
-#define LOG_DEBUG(cat, msg) MyIDE::Core::Logger::instance().debug(cat, msg)
-#define LOG_INFO(cat, msg)  MyIDE::Core::Logger::instance().info(cat, msg)
-#define LOG_WARN(cat, msg)  MyIDE::Core::Logger::instance().warn(cat, msg)
-#define LOG_ERROR(cat, msg) MyIDE::Core::Logger::instance().error(cat, msg)
-#define LOG_FATAL(cat, msg) MyIDE::Core::Logger::instance().fatal(cat, msg)
+#define LOG_TRACE(cat, msg) OpenIDE::Core::Logger::instance().trace(cat, msg)
+#define LOG_DEBUG(cat, msg) OpenIDE::Core::Logger::instance().debug(cat, msg)
+#define LOG_INFO(cat, msg)  OpenIDE::Core::Logger::instance().info(cat, msg)
+#define LOG_WARN(cat, msg)  OpenIDE::Core::Logger::instance().warn(cat, msg)
+#define LOG_ERROR(cat, msg) OpenIDE::Core::Logger::instance().error(cat, msg)
+#define LOG_FATAL(cat, msg) OpenIDE::Core::Logger::instance().fatal(cat, msg)

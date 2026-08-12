@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "lsp/LspTypes.h"
 #include "lsp/LspRequestManager.h"
@@ -11,7 +11,7 @@
 #include <memory>
 #include <string>
 
-namespace MyIDE::Lsp {
+namespace OpenIDE::Lsp {
 
 enum class ServerState {
     Starting,
@@ -71,4 +71,4 @@ private:
     LspSemanticTokenManager m_semanticTokenManager;
 };
 
-} // namespace MyIDE::Lsp
+} // namespace OpenIDE::Lsp

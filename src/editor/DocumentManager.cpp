@@ -1,9 +1,9 @@
-#include "editor/DocumentManager.h"
+﻿#include "editor/DocumentManager.h"
 #include "core/Logger.h"
 #include <QFile>
 #include <QTextStream>
 
-namespace MyIDE::Editor {
+namespace OpenIDE::Editor {
 
 DocumentManager& DocumentManager::instance() {
     static DocumentManager s_instance;
@@ -18,7 +18,7 @@ Document* DocumentManager::openDocument(const std::filesystem::path& path) {
 
     QFile file(QString::fromStdString(canonicalPath.string()));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        MyIDE::Core::Logger::instance().error("DocumentManager", QString("Could not open file: %1").arg(file.errorString()));
+        OpenIDE::Core::Logger::instance().error("DocumentManager", QString("Could not open file: %1").arg(file.errorString()));
         return nullptr;
     }
 
@@ -32,7 +32,7 @@ Document* DocumentManager::openDocument(const std::filesystem::path& path) {
     m_documents[id] = std::move(doc);
 
     emit documentOpened(docPtr);
-    MyIDE::Core::Logger::instance().info("DocumentManager", QString("Opened document [%1]: %2").arg(id).arg(docPtr->fileName()));
+    OpenIDE::Core::Logger::instance().info("DocumentManager", QString("Opened document [%1]: %2").arg(id).arg(docPtr->fileName()));
     return docPtr;
 }
 
@@ -92,4 +92,4 @@ std::vector<Document*> DocumentManager::openDocuments() const {
     return result;
 }
 
-} // namespace MyIDE::Editor
+} // namespace OpenIDE::Editor

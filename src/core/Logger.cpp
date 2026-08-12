@@ -1,9 +1,9 @@
-#include "core/Logger.h"
+﻿#include "core/Logger.h"
 #include <QDateTime>
 #include <QDebug>
 #include <iostream>
 
-namespace MyIDE::Core {
+namespace OpenIDE::Core {
 
 Logger& Logger::instance() {
     static Logger s_instance;
@@ -56,4 +56,4 @@ void Logger::log(LogLevel level, const QString& category, const QString& message
     emit logEmitted(level, category, message, formatted);
 }
 
-} // namespace MyIDE::Core
+} // namespace OpenIDE::Core

@@ -1,6 +1,6 @@
-#include "ui/LeftToolBar.h"
+﻿#include "ui/LeftToolBar.h"
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 LeftToolBar::LeftToolBar(QWidget* parent)
     : QWidget(parent) {
@@ -60,4 +60,4 @@ QPushButton* LeftToolBar::createToolButton(const QString& iconText, const QStrin
     return btn;
 }
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

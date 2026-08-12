@@ -1,4 +1,4 @@
-#include "language/CompletionService.h"
+﻿#include "language/CompletionService.h"
 #include "language/LspClient.h"
 #include "language/CompletionContext.h"
 #include "language/CompletionRanking.h"
@@ -7,7 +7,7 @@
 #include <QElapsedTimer>
 #include <set>
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 CompletionService::CompletionService(LspClient* lspClient, QObject* parent)
     : QObject(parent), m_lspClient(lspClient) {
@@ -36,7 +36,7 @@ void CompletionService::requestCompletion(const CompletionRequestParams& params,
     m_lspClient->requestCompletion(params.path, params.line, params.column, [this, currentId, params, ctx, startTime, callback](const std::vector<Editor::CompletionItemData>& items) {
         // Stale request protection
         if (currentId != m_latestRequestId) {
-            MyIDE::Core::Logger::instance().debug("CompletionService", QString("Discarding stale completion request #%1").arg(currentId));
+            OpenIDE::Core::Logger::instance().debug("CompletionService", QString("Discarding stale completion request #%1").arg(currentId));
             return;
         }
 
@@ -51,7 +51,7 @@ void CompletionService::requestCompletion(const CompletionRequestParams& params,
         auto ranked = CompletionRanking::rankAndFilter(candidates, ctx);
         qint64 totalMs = startTime->elapsed();
 
-        MyIDE::Core::Logger::instance().info("Completion", QString("[Completion] TOTAL: %1 ms (LSP: %2 ms, candidates: %3, ranked: %4, prefix: '%5')")
+        OpenIDE::Core::Logger::instance().info("Completion", QString("[Completion] TOTAL: %1 ms (LSP: %2 ms, candidates: %3, ranked: %4, prefix: '%5')")
             .arg(totalMs).arg(lspMs).arg(candidates.size()).arg(ranked.size()).arg(ctx.typedPrefix));
 
         callback(ranked, currentId);
@@ -86,4 +86,4 @@ std::vector<Editor::CompletionItemData> CompletionService::localWordFallback(con
     return results;
 }
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

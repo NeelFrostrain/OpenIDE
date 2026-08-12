@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <QSyntaxHighlighter>
 #include <QTextDocument>
@@ -12,7 +12,7 @@ extern "C" {
 const TSLanguage* tree_sitter_cpp(void);
 }
 
-namespace MyIDE::Syntax {
+namespace OpenIDE::Syntax {
 
 class TreeSitterHighlighter : public QSyntaxHighlighter {
     Q_OBJECT
@@ -34,4 +34,4 @@ private:
     std::string m_cachedSource;
 };
 
-} // namespace MyIDE::Syntax
+} // namespace OpenIDE::Syntax

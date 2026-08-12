@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <QString>
 #include <filesystem>
@@ -6,7 +6,7 @@
 #include <map>
 #include <nlohmann/json.hpp>
 
-namespace MyIDE::Project {
+namespace OpenIDE::Project {
 
 struct CursorPos {
     int line = 1;
@@ -41,4 +41,4 @@ private:
     std::filesystem::path m_ideRoot;
 };
 
-} // namespace MyIDE::Project
+} // namespace OpenIDE::Project

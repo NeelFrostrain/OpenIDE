@@ -1,7 +1,7 @@
-#include "lsp/LspRequestManager.h"
+﻿#include "lsp/LspRequestManager.h"
 #include "core/Logger.h"
 
-namespace MyIDE::Lsp {
+namespace OpenIDE::Lsp {
 
 LspRequestManager::LspRequestManager(QObject* parent)
     : QObject(parent) {
@@ -28,7 +28,7 @@ int LspRequestManager::createRequest(const std::string& method,
 bool LspRequestManager::validateAndDispatch(int id, const nlohmann::json& responseResult) {
     auto it = m_pendingRequests.find(id);
     if (it == m_pendingRequests.end()) {
-        MyIDE::Core::Logger::instance().debug("LspRequestManager", QString("Discarded response for unknown or cancelled req #%1").arg(id));
+        OpenIDE::Core::Logger::instance().debug("LspRequestManager", QString("Discarded response for unknown or cancelled req #%1").arg(id));
         return false;
     }
 
@@ -36,7 +36,7 @@ bool LspRequestManager::validateAndDispatch(int id, const nlohmann::json& respon
     m_pendingRequests.erase(it);
 
     if (req.generation != m_generation.load()) {
-        MyIDE::Core::Logger::instance().info("LspRequestManager", QString("[LSP] Response discarded id=%1 reason=stale generation (%2 != %3)")
+        OpenIDE::Core::Logger::instance().info("LspRequestManager", QString("[LSP] Response discarded id=%1 reason=stale generation (%2 != %3)")
             .arg(id).arg(req.generation).arg(m_generation.load()));
         return false;
     }
@@ -52,7 +52,7 @@ bool LspRequestManager::validateAndDispatch(int id, const nlohmann::json& respon
 void LspRequestManager::cancelAll() {
     m_generation++;
     m_pendingRequests.clear();
-    MyIDE::Core::Logger::instance().info("LspRequestManager", QString("[LSP] Cancelled all pending requests (New generation: %1)").arg(m_generation.load()));
+    OpenIDE::Core::Logger::instance().info("LspRequestManager", QString("[LSP] Cancelled all pending requests (New generation: %1)").arg(m_generation.load()));
 }
 
-} // namespace MyIDE::Lsp
+} // namespace OpenIDE::Lsp

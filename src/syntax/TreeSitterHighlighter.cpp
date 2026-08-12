@@ -1,4 +1,4 @@
-#include "syntax/TreeSitterHighlighter.h"
+﻿#include "syntax/TreeSitterHighlighter.h"
 #include "ui/ThemeManager.h"
 #include "core/Logger.h"
 #include <QColor>
@@ -6,7 +6,7 @@
 #include <cstring>
 #include <unordered_set>
 
-namespace MyIDE::Syntax {
+namespace OpenIDE::Syntax {
 
 static const std::unordered_set<std::string> s_keywords = {
     "class", "struct", "enum", "namespace", "template", "typename", "using",
@@ -220,4 +220,4 @@ QTextCharFormat TreeSitterHighlighter::determineFormat(TSNode node) const {
     return {};
 }
 
-} // namespace MyIDE::Syntax
+} // namespace OpenIDE::Syntax

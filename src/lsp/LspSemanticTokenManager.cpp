@@ -1,7 +1,7 @@
-#include "lsp/LspSemanticTokenManager.h"
+﻿#include "lsp/LspSemanticTokenManager.h"
 #include "ui/ThemeManager.h"
 
-namespace MyIDE::Lsp {
+namespace OpenIDE::Lsp {
 
 LspSemanticTokenManager::LspSemanticTokenManager(QObject* parent)
     : QObject(parent) {
@@ -68,4 +68,4 @@ QColor LspSemanticTokenManager::colorForTokenType(const std::string& typeName) c
     return colors.text; // #D4D4D4
 }
 
-} // namespace MyIDE::Lsp
+} // namespace OpenIDE::Lsp

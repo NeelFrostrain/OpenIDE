@@ -1,6 +1,6 @@
-#include "ui/TopToolBar.h"
+﻿#include "ui/TopToolBar.h"
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 TopToolBar::TopToolBar(QWidget* parent)
     : QWidget(parent) {
@@ -74,4 +74,4 @@ TopToolBar::TopToolBar(QWidget* parent)
     connect(m_debugBtn, &QPushButton::clicked, this, &TopToolBar::debugRequested);
 }
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QButtonGroup>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 enum class ToolWindowTab {
     Project,
@@ -31,4 +31,4 @@ private:
     QPushButton* createToolButton(const QString& iconText, const QString& tooltip, ToolWindowTab tab);
 };
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

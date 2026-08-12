@@ -1,6 +1,6 @@
-# MyIDE — Lightweight Native C++ & Unreal Engine IDE
+# OpenIDE — Lightweight Native C++ & Unreal Engine IDE
 
-MyIDE is a high-performance, lightweight native desktop IDE built with **C++20** and **Qt 6 Widgets**, designed specifically for **C++**, **Unreal Engine**, and modern multi-project C++ development.
+OpenIDE is a high-performance, lightweight native desktop IDE built with **C++20** and **Qt 6 Widgets**, designed specifically for **C++**, **Unreal Engine**, and modern multi-project C++ development.
 
 ## Features
 

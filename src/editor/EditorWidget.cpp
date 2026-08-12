@@ -1,4 +1,4 @@
-#include "editor/EditorWidget.h"
+﻿#include "editor/EditorWidget.h"
 #include "editor/CompletionController.h"
 #include "ui/ThemeManager.h"
 #include "core/Logger.h"
@@ -6,7 +6,7 @@
 #include <QTextBlock>
 #include <QKeyEvent>
 
-namespace MyIDE::Editor {
+namespace OpenIDE::Editor {
 
 EditorWidget::EditorWidget(Document* doc, QWidget* parent)
     : QPlainTextEdit(parent), m_document(doc) {
@@ -276,7 +276,7 @@ void EditorWidget::keyPressEvent(QKeyEvent* event) {
         int line = cursor.blockNumber() + 1;
         int col = cursor.positionInBlock();
         QString lineText = cursor.block().text().left(col);
-        MyIDE::Core::Logger::instance().info("EditorWidget", QString("Ctrl+Space triggered manual completion at line=%1 col=%2 prefix='%3'").arg(line).arg(col).arg(lineText));
+        OpenIDE::Core::Logger::instance().info("EditorWidget", QString("Ctrl+Space triggered manual completion at line=%1 col=%2 prefix='%3'").arg(line).arg(col).arg(lineText));
         emit completionRequested(lineText, line, col);
         event->accept();
         return;
@@ -299,4 +299,4 @@ void EditorWidget::onTextChanged() {
     }
 }
 
-} // namespace MyIDE::Editor
+} // namespace OpenIDE::Editor

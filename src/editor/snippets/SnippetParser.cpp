@@ -1,9 +1,9 @@
-#include "editor/snippets/SnippetParser.h"
+﻿#include "editor/snippets/SnippetParser.h"
 #include <QRegularExpression>
 #include <map>
 #include <algorithm>
 
-namespace MyIDE::Editor::Snippets {
+namespace OpenIDE::Editor::Snippets {
 
 ParsedSnippet SnippetParser::parse(const QString& templateBody) {
     ParsedSnippet result;
@@ -95,4 +95,4 @@ ParsedSnippet SnippetParser::parse(const QString& templateBody) {
     return result;
 }
 
-} // namespace MyIDE::Editor::Snippets
+} // namespace OpenIDE::Editor::Snippets

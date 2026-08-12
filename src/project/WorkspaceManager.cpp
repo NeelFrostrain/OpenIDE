@@ -1,10 +1,10 @@
-#include "project/WorkspaceManager.h"
+﻿#include "project/WorkspaceManager.h"
 #include "core/Logger.h"
 #include <QDateTime>
 #include <fstream>
 #include <QFileInfo>
 
-namespace MyIDE::Project {
+namespace OpenIDE::Project {
 
 WorkspaceManager& WorkspaceManager::instance() {
     static WorkspaceManager s_instance;
@@ -13,7 +13,7 @@ WorkspaceManager& WorkspaceManager::instance() {
 
 void WorkspaceManager::initializeWorkspace(const std::filesystem::path& ideRoot) {
     m_ideRoot = ideRoot;
-    MyIDE::Core::Logger::instance().info("WorkspaceManager", QString("Workspace storage initialized at %1").arg(QString::fromStdString(m_ideRoot.string())));
+    OpenIDE::Core::Logger::instance().info("WorkspaceManager", QString("Workspace storage initialized at %1").arg(QString::fromStdString(m_ideRoot.string())));
 }
 
 void WorkspaceManager::saveWorkspace(const WorkspaceState& state) {
@@ -39,14 +39,14 @@ void WorkspaceManager::saveWorkspace(const WorkspaceState& state) {
         outFile << j.dump(4);
 
         if (std::filesystem::exists(file) && std::filesystem::file_size(file) > 0) {
-            MyIDE::Core::Logger::instance().info("WorkspaceManager", QString("[Storage] Saved workspace state to %1 (%2 bytes)")
+            OpenIDE::Core::Logger::instance().info("WorkspaceManager", QString("[Storage] Saved workspace state to %1 (%2 bytes)")
                 .arg(QString::fromStdString(file.string()))
                 .arg(std::filesystem::file_size(file)));
         } else {
-            MyIDE::Core::Logger::instance().error("WorkspaceManager", QString("[Storage] Failed file verification for %1").arg(QString::fromStdString(file.string())));
+            OpenIDE::Core::Logger::instance().error("WorkspaceManager", QString("[Storage] Failed file verification for %1").arg(QString::fromStdString(file.string())));
         }
     } catch (const std::exception& e) {
-        MyIDE::Core::Logger::instance().error("WorkspaceManager", QString("Failed to save workspace.json: %1").arg(e.what()));
+        OpenIDE::Core::Logger::instance().error("WorkspaceManager", QString("Failed to save workspace.json: %1").arg(e.what()));
     }
 }
 
@@ -77,11 +77,11 @@ WorkspaceState WorkspaceManager::loadWorkspace() {
             }
         }
 
-        MyIDE::Core::Logger::instance().info("WorkspaceManager", QString("[Storage] Loaded workspace state from %1 (Restored %2 open files)")
+        OpenIDE::Core::Logger::instance().info("WorkspaceManager", QString("[Storage] Loaded workspace state from %1 (Restored %2 open files)")
             .arg(QString::fromStdString(file.string()))
             .arg(state.openFiles.size()));
     } catch (const std::exception& e) {
-        MyIDE::Core::Logger::instance().error("WorkspaceManager", QString("Failed to load workspace.json: %1").arg(e.what()));
+        OpenIDE::Core::Logger::instance().error("WorkspaceManager", QString("Failed to load workspace.json: %1").arg(e.what()));
     }
 
     return state;
@@ -100,7 +100,7 @@ void WorkspaceManager::saveProjectState(const std::string& buildConfig, const st
         };
         std::ofstream outFile(file);
         outFile << j.dump(4);
-        MyIDE::Core::Logger::instance().info("WorkspaceManager", QString("[Storage] Saved project state to %1").arg(QString::fromStdString(file.string())));
+        OpenIDE::Core::Logger::instance().info("WorkspaceManager", QString("[Storage] Saved project state to %1").arg(QString::fromStdString(file.string())));
     } catch (...) {}
 }
 
@@ -117,7 +117,7 @@ void WorkspaceManager::saveSymbolIndex(const std::vector<std::string>& files, in
         };
         std::ofstream outFile(file);
         outFile << j.dump(4);
-        MyIDE::Core::Logger::instance().info("WorkspaceManager", QString("[Storage] Saved symbol index (%1 files, %2 symbols) to %3")
+        OpenIDE::Core::Logger::instance().info("WorkspaceManager", QString("[Storage] Saved symbol index (%1 files, %2 symbols) to %3")
             .arg(files.size()).arg(totalSymbols).arg(QString::fromStdString(file.string())));
     } catch (...) {}
 }
@@ -136,7 +136,7 @@ void WorkspaceManager::saveCache(const std::string& key, const std::string& valu
 
         std::ofstream outFile(file);
         outFile << j.dump(4);
-        MyIDE::Core::Logger::instance().debug("WorkspaceManager", QString("[Storage] Updated cache key '%1' in %2").arg(QString::fromStdString(key)).arg(QString::fromStdString(file.string())));
+        OpenIDE::Core::Logger::instance().debug("WorkspaceManager", QString("[Storage] Updated cache key '%1' in %2").arg(QString::fromStdString(key)).arg(QString::fromStdString(file.string())));
     } catch (...) {}
 }
 
@@ -153,8 +153,8 @@ void WorkspaceManager::saveLspConfig(const std::string& clangdPath, const std::s
         };
         std::ofstream outFile(file);
         outFile << j.dump(4);
-        MyIDE::Core::Logger::instance().info("WorkspaceManager", QString("[Storage] Saved LSP config to %1").arg(QString::fromStdString(file.string())));
+        OpenIDE::Core::Logger::instance().info("WorkspaceManager", QString("[Storage] Saved LSP config to %1").arg(QString::fromStdString(file.string())));
     } catch (...) {}
 }
 
-} // namespace MyIDE::Project
+} // namespace OpenIDE::Project

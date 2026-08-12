@@ -1,11 +1,11 @@
-#include "lsp/LspManager.h"
+﻿#include "lsp/LspManager.h"
 #include "core/Logger.h"
 #include "core/Config.h"
 #include <QProcess>
 #include <QStandardPaths>
 #include <QFileInfo>
 
-namespace MyIDE::Lsp {
+namespace OpenIDE::Lsp {
 
 LspManager& LspManager::instance() {
     static LspManager s_instance;
@@ -18,7 +18,7 @@ LspManager::LspManager() {
     connect(m_client, &Language::LspClient::serverReady, [this]() {
         m_state = ServerState::Ready;
         m_restartAttempts = 0;
-        MyIDE::Core::Logger::instance().info("LspManager", "[LSP] clangd initialized and Ready");
+        OpenIDE::Core::Logger::instance().info("LspManager", "[LSP] clangd initialized and Ready");
         emit stateChanged(m_state);
         emit serverReady();
     });
@@ -34,7 +34,7 @@ LspManager::~LspManager() {
 
 QString LspManager::discoverClangdBinary() const {
     // 1. Configured path
-    QString configured = MyIDE::Core::Config::instance().clangdExecutable();
+    QString configured = OpenIDE::Core::Config::instance().clangdExecutable();
     if (QFileInfo::exists(configured)) {
         return configured;
     }
@@ -79,14 +79,14 @@ bool LspManager::startServer(const Project::ProjectPaths& paths) {
     emit stateChanged(m_state);
 
     QString binary = discoverClangdBinary();
-    MyIDE::Core::Logger::instance().info("LspManager", QString("[LSP] Starting clangd binary: %1").arg(binary));
+    OpenIDE::Core::Logger::instance().info("LspManager", QString("[LSP] Starting clangd binary: %1").arg(binary));
 
     // Capture version for diagnostics
     QProcess verProcess;
     verProcess.start(binary, QStringList() << "--version");
     if (verProcess.waitForFinished(1500)) {
         m_serverVersion = QString::fromUtf8(verProcess.readAllStandardOutput()).trimmed();
-        MyIDE::Core::Logger::instance().info("LspManager", QString("[LSP] clangd version: %1").arg(m_serverVersion));
+        OpenIDE::Core::Logger::instance().info("LspManager", QString("[LSP] clangd version: %1").arg(m_serverVersion));
     }
 
     m_state = ServerState::Initializing;
@@ -108,14 +108,14 @@ void LspManager::restartServer() {
     if (m_restartAttempts >= 3) {
         m_state = ServerState::Degraded;
         emit stateChanged(m_state);
-        MyIDE::Core::Logger::instance().error("LspManager", "[LSP] Max restart attempts reached. Entering Degraded state.");
+        OpenIDE::Core::Logger::instance().error("LspManager", "[LSP] Max restart attempts reached. Entering Degraded state.");
         return;
     }
 
     m_restartAttempts++;
     m_state = ServerState::Restarting;
     emit stateChanged(m_state);
-    MyIDE::Core::Logger::instance().warn("LspManager", QString("[LSP] Restarting clangd (Attempt %1/3)").arg(m_restartAttempts));
+    OpenIDE::Core::Logger::instance().warn("LspManager", QString("[LSP] Restarting clangd (Attempt %1/3)").arg(m_restartAttempts));
 
     stopServer();
     startServer(m_currentPaths);
@@ -192,4 +192,4 @@ void LspManager::requestDocumentSymbols(const std::filesystem::path& path, std::
     if (callback) callback({});
 }
 
-} // namespace MyIDE::Lsp
+} // namespace OpenIDE::Lsp

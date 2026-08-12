@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/snippets/SnippetDefinition.h"
 #include <QPlainTextEdit>
 #include <QTextCursor>
 #include <vector>
 
-namespace MyIDE::Editor::Snippets {
+namespace OpenIDE::Editor::Snippets {
 
 class SnippetSession {
 public:
@@ -28,4 +28,4 @@ private:
     bool m_active = false;
 };
 
-} // namespace MyIDE::Editor::Snippets
+} // namespace OpenIDE::Editor::Snippets

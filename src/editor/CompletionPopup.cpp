@@ -1,8 +1,8 @@
-#include "editor/CompletionPopup.h"
+﻿#include "editor/CompletionPopup.h"
 #include <QPainter>
 #include <QKeyEvent>
 
-namespace MyIDE::Editor {
+namespace OpenIDE::Editor {
 
 CompletionPopup::CompletionPopup(QWidget* parent)
     : QWidget(parent) {
@@ -250,4 +250,4 @@ QSize CompletionItemDelegate::sizeHint(const QStyleOptionViewItem& option, const
     return QSize(480, 24);
 }
 
-} // namespace MyIDE::Editor
+} // namespace OpenIDE::Editor

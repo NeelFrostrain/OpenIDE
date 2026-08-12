@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <QString>
 #include <QVariantMap>
 #include <nlohmann/json.hpp>
 #include <filesystem>
 
-namespace MyIDE::Core {
+namespace OpenIDE::Core {
 
 class Config {
 public:
@@ -44,4 +44,4 @@ private:
     QString m_theme = "Dark";
 };
 
-} // namespace MyIDE::Core
+} // namespace OpenIDE::Core

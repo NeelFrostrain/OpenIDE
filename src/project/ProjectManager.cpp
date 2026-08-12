@@ -1,4 +1,4 @@
-#include "project/ProjectManager.h"
+﻿#include "project/ProjectManager.h"
 #include "project/WorkspaceManager.h"
 #include "project/ProjectIndexer.h"
 #include "language/IncludeIndex.h"
@@ -9,7 +9,7 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 
-namespace MyIDE::Project {
+namespace OpenIDE::Project {
 
 ProjectManager& ProjectManager::instance() {
     static ProjectManager s_instance;
@@ -18,7 +18,7 @@ ProjectManager& ProjectManager::instance() {
 
 bool ProjectManager::openProject(const std::filesystem::path& projectPath) {
     if (!std::filesystem::exists(projectPath)) {
-        MyIDE::Core::Logger::instance().error("ProjectManager", "Project path does not exist");
+        OpenIDE::Core::Logger::instance().error("ProjectManager", "Project path does not exist");
         return false;
     }
 
@@ -36,10 +36,10 @@ bool ProjectManager::openProject(const std::filesystem::path& projectPath) {
     
     // Initialize Workspace Storage & File Logging inside .ide/
     WorkspaceManager::instance().initializeWorkspace(m_paths.ide());
-    MyIDE::Core::Logger::instance().init(QString::fromStdString((m_paths.logs() / "myide.log").string()));
+    OpenIDE::Core::Logger::instance().init(QString::fromStdString((m_paths.logs() / "OpenIDE.log").string()));
 
-    MyIDE::Core::Logger::instance().info("ProjectManager", QString("PROJECT ROOT: %1").arg(QString::fromStdString(m_paths.root.string())));
-    MyIDE::Core::Logger::instance().info("ProjectManager", QString("IDE ROOT: %1").arg(QString::fromStdString(m_paths.ide().string())));
+    OpenIDE::Core::Logger::instance().info("ProjectManager", QString("PROJECT ROOT: %1").arg(QString::fromStdString(m_paths.root.string())));
+    OpenIDE::Core::Logger::instance().info("ProjectManager", QString("IDE ROOT: %1").arg(QString::fromStdString(m_paths.ide().string())));
 
     // Ensure compilation database for clangd include paths & defines
     Cpp::CompilationDatabase::instance().ensureCompilationDatabase(m_paths);
@@ -57,11 +57,11 @@ bool ProjectManager::openProject(const std::filesystem::path& projectPath) {
     WorkspaceManager::instance().saveSymbolIndex(fileList, static_cast<int>(fileList.size() * 15));
     WorkspaceManager::instance().saveCache("lastProjectScan", QDateTime::currentDateTime().toString(Qt::ISODate).toStdString());
     
-    QString clangdPath = MyIDE::Core::Config::instance().clangdExecutable();
+    QString clangdPath = OpenIDE::Core::Config::instance().clangdExecutable();
     WorkspaceManager::instance().saveLspConfig(clangdPath.toStdString(), m_paths.root.string());
 
     emit projectOpened(m_projectName, m_projectType);
-    MyIDE::Core::Logger::instance().info("ProjectManager", QString("Opened project [%1] at %2").arg(m_projectName).arg(QString::fromStdString(m_paths.root.string())));
+    OpenIDE::Core::Logger::instance().info("ProjectManager", QString("Opened project [%1] at %2").arg(m_projectName).arg(QString::fromStdString(m_paths.root.string())));
     return true;
 }
 
@@ -70,7 +70,7 @@ void ProjectManager::closeProject() {
         m_isOpen = false;
         m_files.clear();
         emit projectClosed();
-        MyIDE::Core::Logger::instance().info("ProjectManager", "Project closed");
+        OpenIDE::Core::Logger::instance().info("ProjectManager", "Project closed");
     }
 }
 
@@ -88,14 +88,14 @@ void ProjectManager::initializeIdeDirectory() {
         // Write or update .ide/version.json
         nlohmann::json versionJson = {
             {"formatVersion", 1},
-            {"myideVersion", "0.1.0"}
+            {"OpenIDEVersion", "0.1.0"}
         };
         std::ofstream verFile(m_paths.ide() / "version.json");
         verFile << versionJson.dump(4);
         
-        MyIDE::Core::Logger::instance().info("ProjectManager", "Initialized project-local .ide/ workspace directory");
+        OpenIDE::Core::Logger::instance().info("ProjectManager", "Initialized project-local .ide/ workspace directory");
     } catch (const std::exception& e) {
-        MyIDE::Core::Logger::instance().error("ProjectManager", QString("Failed to initialize .ide directory: %1").arg(e.what()));
+        OpenIDE::Core::Logger::instance().error("ProjectManager", QString("Failed to initialize .ide directory: %1").arg(e.what()));
     }
 }
 
@@ -116,8 +116,8 @@ void ProjectManager::ensureGitIgnoreEntries() {
 
     if (!ideIgnored) {
         std::ofstream outFile(gitIgnorePath, std::ios::app);
-        outFile << "\n# MyIDE workspace directory\n.ide/\n";
-        MyIDE::Core::Logger::instance().info("ProjectManager", "Added .ide/ entry to project .gitignore");
+        outFile << "\n# OpenIDE workspace directory\n.ide/\n";
+        OpenIDE::Core::Logger::instance().info("ProjectManager", "Added .ide/ entry to project .gitignore");
     }
 }
 
@@ -131,11 +131,11 @@ void ProjectManager::detectProjectType() {
 
             if (ext == ".uproject") {
                 m_projectType = ProjectType::UnrealEngine;
-                MyIDE::Core::Logger::instance().info("ProjectManager", "Detected Unreal Engine Project");
+                OpenIDE::Core::Logger::instance().info("ProjectManager", "Detected Unreal Engine Project");
                 return;
             } else if (name == "CMakeLists.txt") {
                 m_projectType = ProjectType::CMake;
-                MyIDE::Core::Logger::instance().info("ProjectManager", "Detected CMake Project");
+                OpenIDE::Core::Logger::instance().info("ProjectManager", "Detected CMake Project");
             }
         }
     }
@@ -160,7 +160,7 @@ void ProjectManager::scanProjectFiles() {
             }
         }
     } catch (const std::exception& e) {
-        MyIDE::Core::Logger::instance().error("ProjectManager", QString("Error scanning project files: %1").arg(e.what()));
+        OpenIDE::Core::Logger::instance().error("ProjectManager", QString("Error scanning project files: %1").arg(e.what()));
     }
 }
 
@@ -168,4 +168,4 @@ std::vector<std::filesystem::path> ProjectManager::sourceFiles() const {
     return m_files;
 }
 
-} // namespace MyIDE::Project
+} // namespace OpenIDE::Project

@@ -1,9 +1,9 @@
-#include "editor/Document.h"
+﻿#include "editor/Document.h"
 #include "core/Logger.h"
 #include <QFile>
 #include <QTextStream>
 
-namespace MyIDE::Editor {
+namespace OpenIDE::Editor {
 
 Document::Document(DocumentId id, const std::filesystem::path& path, const QString& content)
     : m_id(id), m_path(path), m_content(content) {
@@ -30,7 +30,7 @@ bool Document::save() {
     
     QFile file(QString::fromStdString(m_path.string()));
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        MyIDE::Core::Logger::instance().error("Document", QString("Failed to save file: %1").arg(file.errorString()));
+        OpenIDE::Core::Logger::instance().error("Document", QString("Failed to save file: %1").arg(file.errorString()));
         return false;
     }
 
@@ -41,7 +41,7 @@ bool Document::save() {
     m_isDirty = false;
     emit dirtyStateChanged(false);
     emit saved();
-    MyIDE::Core::Logger::instance().info("Document", QString("Saved document: %1").arg(fileName()));
+    OpenIDE::Core::Logger::instance().info("Document", QString("Saved document: %1").arg(fileName()));
     return true;
 }
 
@@ -64,4 +64,4 @@ bool Document::reload() {
     return true;
 }
 
-} // namespace MyIDE::Editor
+} // namespace OpenIDE::Editor

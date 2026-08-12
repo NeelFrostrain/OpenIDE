@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/ITextEditor.h"
 #include <QListWidget>
@@ -8,7 +8,7 @@
 #include <QVBoxLayout>
 #include <vector>
 
-namespace MyIDE::Editor {
+namespace OpenIDE::Editor {
 
 class CompletionPopup : public QWidget {
     Q_OBJECT
@@ -57,4 +57,4 @@ public:
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
 
-} // namespace MyIDE::Editor
+} // namespace OpenIDE::Editor

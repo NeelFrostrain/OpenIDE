@@ -1,9 +1,9 @@
-#include "language/LspClient.h"
+﻿#include "language/LspClient.h"
 #include "core/Logger.h"
 #include <QUrl>
 #include <QCoreApplication>
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 static QString pathToUri(const std::filesystem::path& path) {
     return QUrl::fromLocalFile(QString::fromStdString(path.string())).toString();
@@ -72,7 +72,7 @@ bool LspClient::start(const QString& clangdPath, const std::filesystem::path& wo
         m_transport.sendJson(initializedNotif);
         m_initialized = true;
         
-        MyIDE::Core::Logger::instance().info("LspClient", "clangd initialized successfully. Flushing pending open documents...");
+        OpenIDE::Core::Logger::instance().info("LspClient", "clangd initialized successfully. Flushing pending open documents...");
 
         // Send didOpen for all opened documents
         for (const auto& [pathStr, content] : m_openDocuments) {
@@ -90,7 +90,7 @@ bool LspClient::start(const QString& clangdPath, const std::filesystem::path& wo
                 {"params", params}
             };
             m_transport.sendJson(notif);
-            MyIDE::Core::Logger::instance().debug("LspClient", QString("Flushed textDocument/didOpen for %1").arg(QString::fromStdString(pathStr)));
+            OpenIDE::Core::Logger::instance().debug("LspClient", QString("Flushed textDocument/didOpen for %1").arg(QString::fromStdString(pathStr)));
         }
 
         emit serverReady();
@@ -119,7 +119,7 @@ void LspClient::didOpen(const std::filesystem::path& path, const QString& conten
     m_openDocuments[pathStr] = content;
 
     if (!m_initialized) {
-        MyIDE::Core::Logger::instance().debug("LspClient", QString("clangd not initialized yet. Queued didOpen for %1").arg(QString::fromStdString(pathStr)));
+        OpenIDE::Core::Logger::instance().debug("LspClient", QString("clangd not initialized yet. Queued didOpen for %1").arg(QString::fromStdString(pathStr)));
         return;
     }
 
@@ -139,7 +139,7 @@ void LspClient::didOpen(const std::filesystem::path& path, const QString& conten
     };
 
     m_transport.sendJson(notif);
-    MyIDE::Core::Logger::instance().debug("LspClient", QString("Sent textDocument/didOpen for %1").arg(QString::fromStdString(pathStr)));
+    OpenIDE::Core::Logger::instance().debug("LspClient", QString("Sent textDocument/didOpen for %1").arg(QString::fromStdString(pathStr)));
 }
 
 void LspClient::didChange(const std::filesystem::path& path, const QString& content, int version) {
@@ -182,7 +182,7 @@ void LspClient::didSave(const std::filesystem::path& path) {
 
 void LspClient::requestCompletion(const std::filesystem::path& path, int line, int column, std::function<void(const std::vector<Editor::CompletionItemData>&)> callback) {
     if (!m_initialized) {
-        MyIDE::Core::Logger::instance().info("LspClient", "Cannot request completion: clangd not initialized yet");
+        OpenIDE::Core::Logger::instance().info("LspClient", "Cannot request completion: clangd not initialized yet");
         callback({});
         return;
     }
@@ -200,7 +200,7 @@ void LspClient::requestCompletion(const std::filesystem::path& path, int line, i
         {"params", params}
     };
 
-    MyIDE::Core::Logger::instance().debug("LspClient", QString("Sending textDocument/completion req #%1 for line=%2 col=%3 uri=%4").arg(id).arg(line - 1).arg(column).arg(pathToUri(path)));
+    OpenIDE::Core::Logger::instance().debug("LspClient", QString("Sending textDocument/completion req #%1 for line=%2 col=%3 uri=%4").arg(id).arg(line - 1).arg(column).arg(pathToUri(path)));
 
     m_responseCallbacks[id] = [id, callback](const nlohmann::json& response) {
         std::vector<Editor::CompletionItemData> result;
@@ -233,7 +233,7 @@ void LspClient::requestCompletion(const std::filesystem::path& path, int line, i
             }
         }
 
-        MyIDE::Core::Logger::instance().info("LspClient", QString("LSP completion req #%1 returned %2 items").arg(id).arg(result.size()));
+        OpenIDE::Core::Logger::instance().info("LspClient", QString("LSP completion req #%1 returned %2 items").arg(id).arg(result.size()));
         callback(result);
     };
 
@@ -439,4 +439,4 @@ void LspClient::onMessageReceived(const nlohmann::json& json) {
     }
 }
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

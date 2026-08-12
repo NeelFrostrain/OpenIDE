@@ -1,4 +1,4 @@
-#include "ui/MainWindow.h"
+﻿#include "ui/MainWindow.h"
 #include "editor/DocumentManager.h"
 #include "project/ProjectManager.h"
 #include "project/WorkspaceManager.h"
@@ -16,12 +16,12 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent) {
 
-    setWindowTitle("MyIDE — Native C++ & Unreal Engine IDE");
+    setWindowTitle("OpenIDE — Native C++ & Unreal Engine IDE");
     resize(1440, 900);
 
     m_lspClient = new Language::LspClient(this);
@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget* parent)
     m_completionController = new Editor::CompletionController(m_completionService, this);
     m_searchDialog = new SearchEverywhereDialog(this);
 
-    connect(&MyIDE::Core::Logger::instance(), &MyIDE::Core::Logger::logEmitted, this, &MainWindow::onLogEmitted);
+    connect(&OpenIDE::Core::Logger::instance(), &OpenIDE::Core::Logger::logEmitted, this, &MainWindow::onLogEmitted);
     connect(m_lspClient, &Language::LspClient::diagnosticsPublished, this, &MainWindow::onDiagnosticsPublished);
     connect(m_lspClient, &Language::LspClient::serverReady, [this]() {
         m_lspStatusLabel->setText("clangd: Ready ✓");
@@ -105,7 +105,7 @@ MainWindow::MainWindow(QWidget* parent)
         }
     });
 
-    MyIDE::Core::Logger::instance().info("UI", "MainWindow initialized with JetBrains Native IDE UI");
+    OpenIDE::Core::Logger::instance().info("UI", "MainWindow initialized with JetBrains Native IDE UI");
 
     // Open current working directory project workspace by default
     openFolder(std::filesystem::current_path());
@@ -160,7 +160,7 @@ void MainWindow::createMenuBar() {
     // Build Menu
     QMenu* buildMenu = menuBar->addMenu("&Build");
     buildMenu->addAction("&Build Project", QKeySequence("Ctrl+B"), []() {
-        MyIDE::Core::Logger::instance().info("Build", "Starting project build...");
+        OpenIDE::Core::Logger::instance().info("Build", "Starting project build...");
     });
     buildMenu->addAction("Inspect C++ &Configuration...", [this]() {
         auto& pm = Project::ProjectManager::instance();
@@ -191,15 +191,15 @@ void MainWindow::createMenuBar() {
 
     // Help Menu
     QMenu* helpMenu = menuBar->addMenu("&Help");
-    helpMenu->addAction("&About MyIDE", [this]() {
-        MyIDE::Core::Logger::instance().info("App", "MyIDE v0.1.0 — JetBrains-Inspired Native C++ IDE");
+    helpMenu->addAction("&About OpenIDE", [this]() {
+        OpenIDE::Core::Logger::instance().info("App", "OpenIDE v0.1.0 — JetBrains-Inspired Native C++ IDE");
     });
 }
 
 void MainWindow::createTopToolBar() {
     m_topToolBar = new TopToolBar(this);
     connect(m_topToolBar, &TopToolBar::buildRequested, []() {
-        MyIDE::Core::Logger::instance().info("Build", "Build requested from top toolbar");
+        OpenIDE::Core::Logger::instance().info("Build", "Build requested from top toolbar");
     });
 }
 
@@ -595,11 +595,11 @@ void MainWindow::onDiagnosticsPublished(const std::filesystem::path& path, const
     }
 }
 
-void MainWindow::onLogEmitted(MyIDE::Core::LogLevel level, const QString& category, const QString& message, const QString& formattedMessage) {
+void MainWindow::onLogEmitted(OpenIDE::Core::LogLevel level, const QString& category, const QString& message, const QString& formattedMessage) {
     Q_UNUSED(level);
     Q_UNUSED(category);
     Q_UNUSED(message);
     m_outputLog->appendPlainText(formattedMessage);
 }
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

@@ -1,9 +1,9 @@
-#include "editor/CompletionController.h"
+﻿#include "editor/CompletionController.h"
 #include "editor/snippets/SnippetEngine.h"
 #include "core/Logger.h"
 #include <QApplication>
 
-namespace MyIDE::Editor {
+namespace OpenIDE::Editor {
 
 static const char* cancelReasonToString(CancelReason reason) {
     switch (reason) {
@@ -45,11 +45,11 @@ bool CompletionController::handleKeyPress(QKeyEvent* event) {
 
     if (key == Qt::Key_Down) {
         m_popup->moveSelectionDown();
-        MyIDE::Core::Logger::instance().info("Completion", QString("[Session] Navigate Down item='%1'").arg(m_popup->currentItemData().label));
+        OpenIDE::Core::Logger::instance().info("Completion", QString("[Session] Navigate Down item='%1'").arg(m_popup->currentItemData().label));
         return true;
     } else if (key == Qt::Key_Up) {
         m_popup->moveSelectionUp();
-        MyIDE::Core::Logger::instance().info("Completion", QString("[Session] Navigate Up item='%1'").arg(m_popup->currentItemData().label));
+        OpenIDE::Core::Logger::instance().info("Completion", QString("[Session] Navigate Up item='%1'").arg(m_popup->currentItemData().label));
         return true;
     } else if (key == Qt::Key_PageDown) {
         m_popup->moveSelectionPageDown();
@@ -66,7 +66,7 @@ bool CompletionController::handleKeyPress(QKeyEvent* event) {
     } else if (key == Qt::Key_Return || key == Qt::Key_Enter || key == Qt::Key_Tab) {
         auto item = m_popup->currentItemData();
         if (!item.label.isEmpty()) {
-            MyIDE::Core::Logger::instance().info("Completion", QString("[Session] Accept item='%1'").arg(item.label));
+            OpenIDE::Core::Logger::instance().info("Completion", QString("[Session] Accept item='%1'").arg(item.label));
             onCompletionItemSelected(item);
         } else {
             cancelSession(CancelReason::Accepted);
@@ -124,7 +124,7 @@ void CompletionController::cancelSession(CancelReason reason) {
         m_session.active = false;
         m_session.generation++;
         m_popup->hide();
-        MyIDE::Core::Logger::instance().info("CompletionController", QString("[Session] CANCELLED generation=%1 reason=%2")
+        OpenIDE::Core::Logger::instance().info("CompletionController", QString("[Session] CANCELLED generation=%1 reason=%2")
             .arg(m_session.generation)
             .arg(cancelReasonToString(reason)));
     }
@@ -164,7 +164,7 @@ void CompletionController::triggerCompletion(bool isManual) {
     m_lastLine = line;
     m_lastCol = col;
 
-    MyIDE::Core::Logger::instance().info("CompletionController", QString("[Session] START generation=%1 file=%2 pos=%3:%4 prefix='%5'")
+    OpenIDE::Core::Logger::instance().info("CompletionController", QString("[Session] START generation=%1 file=%2 pos=%3:%4 prefix='%5'")
         .arg(reqGen)
         .arg(QString::fromStdString(m_session.path.filename().string()))
         .arg(line).arg(col).arg(m_session.prefix));
@@ -181,7 +181,7 @@ void CompletionController::triggerCompletion(bool isManual) {
         Q_UNUSED(requestId);
         // Stale response race condition check
         if (!m_session.active || reqGen != m_session.generation) {
-            MyIDE::Core::Logger::instance().info("CompletionController", QString("[Session] DISCARDED response for generation=%1 (current=%2, active=%3)")
+            OpenIDE::Core::Logger::instance().info("CompletionController", QString("[Session] DISCARDED response for generation=%1 (current=%2, active=%3)")
                 .arg(reqGen).arg(m_session.generation).arg(m_session.active));
             return;
         }
@@ -195,7 +195,7 @@ void CompletionController::triggerCompletion(bool isManual) {
         if (m_popup->hasItems()) {
             repositionPopup();
             m_popup->show();
-            MyIDE::Core::Logger::instance().info("CompletionController", QString("[Session] SHOWING popup for generation=%1 with %2 items")
+            OpenIDE::Core::Logger::instance().info("CompletionController", QString("[Session] SHOWING popup for generation=%1 with %2 items")
                 .arg(reqGen).arg(items.size()));
         } else {
             cancelSession(CancelReason::NoResults);
@@ -273,4 +273,4 @@ void CompletionController::onCompletionItemSelected(const CompletionItemData& it
     cancelSession(CancelReason::Accepted);
 }
 
-} // namespace MyIDE::Editor
+} // namespace OpenIDE::Editor

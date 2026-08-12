@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/snippets/SnippetDefinition.h"
 #include "editor/ITextEditor.h"
 #include <vector>
 #include <map>
 
-namespace MyIDE::Editor::Snippets {
+namespace OpenIDE::Editor::Snippets {
 
 class SnippetRegistry {
 public:
@@ -25,4 +25,4 @@ private:
     std::vector<SnippetDefinition> m_snippets;
 };
 
-} // namespace MyIDE::Editor::Snippets
+} // namespace OpenIDE::Editor::Snippets

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "project/ProjectManager.h"
 #include <QObject>
@@ -8,7 +8,7 @@
 #include <thread>
 #include <mutex>
 
-namespace MyIDE::Project {
+namespace OpenIDE::Project {
 
 struct IndexMetadata {
     int version = 1;
@@ -51,4 +51,4 @@ private:
     std::mutex m_mutex;
 };
 
-} // namespace MyIDE::Project
+} // namespace OpenIDE::Project

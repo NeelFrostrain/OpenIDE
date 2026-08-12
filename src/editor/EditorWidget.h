@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/ITextEditor.h"
 #include "editor/Document.h"
@@ -8,7 +8,7 @@
 #include <QWidget>
 #include <set>
 
-namespace MyIDE::Editor {
+namespace OpenIDE::Editor {
 
 class EditorWidget : public QPlainTextEdit, public ITextEditor {
     Q_OBJECT
@@ -81,4 +81,4 @@ private:
     EditorWidget* m_editor;
 };
 
-} // namespace MyIDE::Editor
+} // namespace OpenIDE::Editor

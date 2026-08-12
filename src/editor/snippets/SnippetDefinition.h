@@ -1,10 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include <QString>
 #include <QStringList>
 #include <vector>
 
-namespace MyIDE::Editor::Snippets {
+namespace OpenIDE::Editor::Snippets {
 
 struct PlaceholderOccurrence {
     int startPos = 0; // Relative offset in expanded text
@@ -33,4 +33,4 @@ struct SnippetDefinition {
     int priority = 100;
 };
 
-} // namespace MyIDE::Editor::Snippets
+} // namespace OpenIDE::Editor::Snippets

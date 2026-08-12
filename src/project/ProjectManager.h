@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <QObject>
 #include <filesystem>
 #include <vector>
 #include <QString>
 
-namespace MyIDE::Project {
+namespace OpenIDE::Project {
 
 enum class ProjectType {
     GenericCpp,
@@ -65,4 +65,4 @@ private:
     std::vector<std::filesystem::path> m_files;
 };
 
-} // namespace MyIDE::Project
+} // namespace OpenIDE::Project

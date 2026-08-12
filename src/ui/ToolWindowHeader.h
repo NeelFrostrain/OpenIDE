@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <QWidget>
 #include <QLabel>
 #include <QPushButton>
 #include <QHBoxLayout>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 class ToolWindowHeader : public QWidget {
     Q_OBJECT
@@ -25,4 +25,4 @@ private:
     QPushButton* m_closeBtn = nullptr;
 };
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

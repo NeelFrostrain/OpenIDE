@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "project/ProjectManager.h"
 #include <QString>
@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-namespace MyIDE::Cpp {
+namespace OpenIDE::Cpp {
 
 class CompilationDatabase {
 public:
@@ -22,4 +22,4 @@ private:
     CompilationDatabase() = default;
 };
 
-} // namespace MyIDE::Cpp
+} // namespace OpenIDE::Cpp

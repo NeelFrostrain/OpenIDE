@@ -1,10 +1,10 @@
-#include "language/IncludeIndex.h"
+﻿#include "language/IncludeIndex.h"
 #include "core/Logger.h"
 #include <algorithm>
 #include <fstream>
 #include <nlohmann/json.hpp>
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 IncludeIndex& IncludeIndex::instance() {
     static IncludeIndex s_instance;
@@ -28,7 +28,7 @@ IncludeIndex::IncludeIndex() {
 void IncludeIndex::clearProjectHeaders() {
     std::lock_guard<std::mutex> lock(m_mutex);
     m_projectHeaders.clear();
-    MyIDE::Core::Logger::instance().info("IncludeIndex", "[IncludeIndex] Cleared project headers for new project context");
+    OpenIDE::Core::Logger::instance().info("IncludeIndex", "[IncludeIndex] Cleared project headers for new project context");
 }
 
 void IncludeIndex::addProjectHeader(const std::string& relativePath) {
@@ -58,7 +58,7 @@ bool IncludeIndex::loadFromDisk(const std::filesystem::path& ideDir) {
         std::lock_guard<std::mutex> lock(m_mutex);
         m_projectHeaders = j.value("headers", std::vector<std::string>{});
 
-        MyIDE::Core::Logger::instance().info("IncludeIndex", QString("[IncludeIndex] Loaded %1 dynamic project headers from %2")
+        OpenIDE::Core::Logger::instance().info("IncludeIndex", QString("[IncludeIndex] Loaded %1 dynamic project headers from %2")
             .arg(m_projectHeaders.size()).arg(QString::fromStdString(file.string())));
         return true;
     } catch (...) {
@@ -105,4 +105,4 @@ std::vector<Editor::CompletionItemData> IncludeIndex::getIncludeCompletions(cons
     return results;
 }
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

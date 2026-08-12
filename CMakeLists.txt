@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(MyIDE VERSION 0.1.0 LANGUAGES C CXX)
+project(OpenIDE VERSION 0.1.0 LANGUAGES C CXX)
 
 if(POLICY CMP0135)
     cmake_policy(SET CMP0135 NEW)
@@ -173,9 +173,9 @@ set(SOURCES
     src/ui/MainWindow.cpp
 )
 
-add_executable(MyIDE ${SOURCES})
+add_executable(OpenIDE ${SOURCES})
 
-target_link_libraries(MyIDE PRIVATE
+target_link_libraries(OpenIDE PRIVATE
     Qt6::Core
     Qt6::Widgets
     Qt6::Gui
@@ -185,6 +185,6 @@ target_link_libraries(MyIDE PRIVATE
     tree_sitter_cpp
 )
 
-target_include_directories(MyIDE PRIVATE
+target_include_directories(OpenIDE PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )

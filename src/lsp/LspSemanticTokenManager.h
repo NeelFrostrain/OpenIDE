@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "lsp/LspTypes.h"
 #include <QObject>
@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <nlohmann/json.hpp>
 
-namespace MyIDE::Lsp {
+namespace OpenIDE::Lsp {
 
 struct SemanticToken {
     int line = 0;
@@ -35,4 +35,4 @@ private:
     std::vector<std::string> m_tokenModifiers;
 };
 
-} // namespace MyIDE::Lsp
+} // namespace OpenIDE::Lsp

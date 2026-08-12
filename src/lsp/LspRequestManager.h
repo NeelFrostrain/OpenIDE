@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "lsp/LspTypes.h"
 #include <QObject>
@@ -7,7 +7,7 @@
 #include <functional>
 #include <nlohmann/json.hpp>
 
-namespace MyIDE::Lsp {
+namespace OpenIDE::Lsp {
 
 struct PendingRequest {
     int id = 0;
@@ -41,4 +41,4 @@ private:
     std::unordered_map<int, PendingRequest> m_pendingRequests;
 };
 
-} // namespace MyIDE::Lsp
+} // namespace OpenIDE::Lsp

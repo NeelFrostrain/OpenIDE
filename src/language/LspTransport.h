@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <QObject>
 #include <QProcess>
 #include <QByteArray>
 #include <nlohmann/json.hpp>
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 class LspTransport : public QObject {
     Q_OBJECT
@@ -32,4 +32,4 @@ private:
     QByteArray m_buffer;
 };
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

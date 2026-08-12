@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/ITextEditor.h"
 #include <QObject>
@@ -7,7 +7,7 @@
 #include <functional>
 #include <memory>
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 class LspClient;
 
@@ -42,4 +42,4 @@ private:
     int m_latestRequestId = 0;
 };
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

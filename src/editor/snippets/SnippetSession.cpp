@@ -1,7 +1,7 @@
-#include "editor/snippets/SnippetSession.h"
+﻿#include "editor/snippets/SnippetSession.h"
 #include "core/Logger.h"
 
-namespace MyIDE::Editor::Snippets {
+namespace OpenIDE::Editor::Snippets {
 
 SnippetSession::SnippetSession(QPlainTextEdit* editor, const ParsedSnippet& parsed, int insertPos)
     : m_editor(editor), m_parsed(parsed), m_insertPos(insertPos), m_active(true) {
@@ -15,7 +15,7 @@ SnippetSession::SnippetSession(QPlainTextEdit* editor, const ParsedSnippet& pars
     cursor.insertText(m_parsed.expandedText);
     cursor.endEditBlock();
 
-    MyIDE::Core::Logger::instance().info("SnippetSession", QString("[SnippetSession] Inserted expanded snippet length=%1").arg(m_parsed.expandedText.length()));
+    OpenIDE::Core::Logger::instance().info("SnippetSession", QString("[SnippetSession] Inserted expanded snippet length=%1").arg(m_parsed.expandedText.length()));
 
     if (!m_parsed.placeholders.empty()) {
         m_currentPlaceholderIdx = 0;
@@ -61,7 +61,7 @@ bool SnippetSession::nextPlaceholder() {
         cursor.setPosition(m_insertPos + m_parsed.finalCursorPos);
         m_editor->setTextCursor(cursor);
         m_active = false;
-        MyIDE::Core::Logger::instance().info("SnippetSession", "[SnippetSession] Reached $0. Snippet session finished.");
+        OpenIDE::Core::Logger::instance().info("SnippetSession", "[SnippetSession] Reached $0. Snippet session finished.");
         return true;
     }
 }
@@ -81,4 +81,4 @@ void SnippetSession::updateMirroredPlaceholders() {
     // Optional placeholder mirror synchronization
 }
 
-} // namespace MyIDE::Editor::Snippets
+} // namespace OpenIDE::Editor::Snippets

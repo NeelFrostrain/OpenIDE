@@ -1,8 +1,8 @@
-#include "ui/SearchEverywhereDialog.h"
+﻿#include "ui/SearchEverywhereDialog.h"
 #include <QKeyEvent>
 #include <QHeaderView>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 SearchEverywhereDialog::SearchEverywhereDialog(QWidget* parent)
     : QDialog(parent) {
@@ -117,4 +117,4 @@ void SearchEverywhereDialog::keyPressEvent(QKeyEvent* event) {
     }
 }
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/ITextEditor.h"
 #include <vector>
@@ -7,7 +7,7 @@
 #include <QString>
 #include <mutex>
 
-namespace MyIDE::Language {
+namespace OpenIDE::Language {
 
 class IncludeIndex {
 public:
@@ -30,4 +30,4 @@ private:
     mutable std::mutex m_mutex;
 };
 
-} // namespace MyIDE::Language
+} // namespace OpenIDE::Language

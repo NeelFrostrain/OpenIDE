@@ -1,11 +1,11 @@
-#include "cpp/CompilationDatabase.h"
+﻿#include "cpp/CompilationDatabase.h"
 #include "unreal/UnrealProjectDetector.h"
 #include "core/Logger.h"
 #include <fstream>
 #include <algorithm>
 #include <nlohmann/json.hpp>
 
-namespace MyIDE::Cpp {
+namespace OpenIDE::Cpp {
 
 CompilationDatabase& CompilationDatabase::instance() {
     static CompilationDatabase s_instance;
@@ -19,12 +19,12 @@ bool CompilationDatabase::ensureCompilationDatabase(const Project::ProjectPaths&
     std::error_code ec;
     std::filesystem::create_directories(lspDir, ec);
 
-    MyIDE::Core::Logger::instance().info("LSP", QString("[LSP] Generating compilation database at %1")
+    OpenIDE::Core::Logger::instance().info("LSP", QString("[LSP] Generating compilation database at %1")
         .arg(QString::fromStdString(targetDb.string())));
 
     std::filesystem::path userRootDb = paths.root / "compile_commands.json";
     if (std::filesystem::exists(userRootDb)) {
-        MyIDE::Core::Logger::instance().info("LSP", QString("[Project] User-owned compile_commands.json found at project root. Copying to %1")
+        OpenIDE::Core::Logger::instance().info("LSP", QString("[Project] User-owned compile_commands.json found at project root. Copying to %1")
             .arg(QString::fromStdString(targetDb.string())));
         try {
             std::filesystem::copy_file(userRootDb, targetDb, std::filesystem::copy_options::overwrite_existing);
@@ -36,7 +36,7 @@ bool CompilationDatabase::ensureCompilationDatabase(const Project::ProjectPaths&
     if (unrealInfo.isValid) {
         bool res = Unreal::UnrealProjectDetector::instance().generateCompileCommands(unrealInfo, targetDb);
         if (res && std::filesystem::exists(targetDb) && std::filesystem::file_size(targetDb) > 0) {
-            MyIDE::Core::Logger::instance().info("LSP", QString("[LSP] compile_commands.json verified size=%1 bytes")
+            OpenIDE::Core::Logger::instance().info("LSP", QString("[LSP] compile_commands.json verified size=%1 bytes")
                 .arg(std::filesystem::file_size(targetDb)));
             return true;
         }
@@ -61,10 +61,10 @@ bool CompilationDatabase::ensureCompilationDatabase(const Project::ProjectPaths&
 
         std::ofstream outFile(targetDb);
         outFile << compileDb.dump(4);
-        MyIDE::Core::Logger::instance().info("LSP", QString("[LSP] Generated default compile_commands.json with %1 entries").arg(compileDb.size()));
+        OpenIDE::Core::Logger::instance().info("LSP", QString("[LSP] Generated default compile_commands.json with %1 entries").arg(compileDb.size()));
         return true;
     } catch (const std::exception& e) {
-        MyIDE::Core::Logger::instance().error("LSP", QString("[LSP] Error generating default compile_commands.json: %1").arg(e.what()));
+        OpenIDE::Core::Logger::instance().error("LSP", QString("[LSP] Error generating default compile_commands.json: %1").arg(e.what()));
         return false;
     }
 }
@@ -158,4 +158,4 @@ std::string CompilationDatabase::getCommandForFile(const std::filesystem::path& 
     return {};
 }
 
-} // namespace MyIDE::Cpp
+} // namespace OpenIDE::Cpp

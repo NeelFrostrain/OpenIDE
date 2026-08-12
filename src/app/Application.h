@@ -1,9 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include <QApplication>
 #include <memory>
 
-namespace MyIDE::App {
+namespace OpenIDE::App {
 
 class Application : public QApplication {
     Q_OBJECT
@@ -15,4 +15,4 @@ public:
     bool init();
 };
 
-} // namespace MyIDE::App
+} // namespace OpenIDE::App

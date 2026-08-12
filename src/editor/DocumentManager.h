@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "editor/Document.h"
 #include <QObject>
@@ -6,7 +6,7 @@
 #include <memory>
 #include <filesystem>
 
-namespace MyIDE::Editor {
+namespace OpenIDE::Editor {
 
 class DocumentManager : public QObject {
     Q_OBJECT
@@ -36,4 +36,4 @@ private:
     std::unordered_map<DocumentId, std::unique_ptr<Document>> m_documents;
 };
 
-} // namespace MyIDE::Editor
+} // namespace OpenIDE::Editor

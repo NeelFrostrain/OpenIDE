@@ -1,7 +1,7 @@
-#include "editor/snippets/SnippetRegistry.h"
+﻿#include "editor/snippets/SnippetRegistry.h"
 #include <algorithm>
 
-namespace MyIDE::Editor::Snippets {
+namespace OpenIDE::Editor::Snippets {
 
 SnippetRegistry& SnippetRegistry::instance() {
     static SnippetRegistry s_instance;
@@ -183,4 +183,4 @@ void SnippetRegistry::registerUnrealSnippets() {
     registerSnippet({"uinterface", {}, "Unreal UINTERFACE declaration", "Unreal Classes", "UINTERFACE(BlueprintType)\nclass ${1:INTERFACE_NAME} : public UInterface\n{\n\tGENERATED_BODY()\n};", "cpp", 280});
 }
 
-} // namespace MyIDE::Editor::Snippets
+} // namespace OpenIDE::Editor::Snippets

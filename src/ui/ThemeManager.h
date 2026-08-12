@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <QColor>
 #include <QFont>
 #include <QString>
 #include <QPalette>
 
-namespace MyIDE::UI {
+namespace OpenIDE::UI {
 
 struct ThemeColors {
     QColor windowBg       = QColor("#1E1E1E");
@@ -52,4 +52,4 @@ private:
     ThemeColors m_colors;
 };
 
-} // namespace MyIDE::UI
+} // namespace OpenIDE::UI
