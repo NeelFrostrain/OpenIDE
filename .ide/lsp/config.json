@@ -1,0 +1,6 @@
+{
+    "compileCommandsDir": "E:\\Projects\\nscode",
+    "executable": "clangd",
+    "positionEncoding": "utf-16",
+    "server": "clangd"
+}

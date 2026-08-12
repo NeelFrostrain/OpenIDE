@@ -1,18 +1,35 @@
-#pragma once
+﻿#pragma once
 
 #include <QDialog>
 #include <QLineEdit>
 #include <QListWidget>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QPushButton>
-#include "core/SymbolIndex.h"
+#include <filesystem>
+#include <vector>
+
+namespace OpenIDE::UI {
+
+struct SearchResultItem {
+    QString title;
+    QString subtitle;
+    QString category; // "File", "Class", "Symbol", "Action"
+    std::filesystem::path path;
+    int line = 0;
+};
 
 class SearchEverywhereDialog : public QDialog {
     Q_OBJECT
+
 public:
-    explicit SearchEverywhereDialog(SymbolIndex* index, QWidget* parent = nullptr);
+    explicit SearchEverywhereDialog(QWidget* parent = nullptr);
+
+    void setFiles(const std::vector<std::filesystem::path>& files);
 
 signals:
-    void symbolSelected(const SymbolItem& item);
+    void fileSelected(const std::filesystem::path& path, int line);
+    void actionTriggered(const QString& actionName);
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
@@ -22,10 +39,10 @@ private slots:
     void onItemActivated(QListWidgetItem* item);
 
 private:
-    void updateResults();
-
-    SymbolIndex* m_index;
-    QLineEdit* m_searchEdit;
-    QListWidget* m_resultsList;
-    QString m_activeFilter{"All"};
+    QLineEdit* m_searchInput = nullptr;
+    QListWidget* m_resultsList = nullptr;
+    std::vector<std::filesystem::path> m_files;
+    std::vector<SearchResultItem> m_currentResults;
 };
+
+} // namespace OpenIDE::UI

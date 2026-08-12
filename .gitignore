@@ -1,3 +1,20 @@
+# Build outputs
 build/
-*.o
-*.obj
+bin/
+lib/
+out/
+.cache/
+
+# IDE / Editor configuration
+.vs/
+.vscode/
+.idea/
+
+# User & temporary files
+*.user
+*.suo
+*.userosset
+*.sln.docstates
+*.log
+*.tmp
+/.ide

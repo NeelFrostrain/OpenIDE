@@ -1,43 +1,26 @@
-# MyIDE — prototype (Milestone 1: shell)
+# OpenIDE — Lightweight Native C++ & Unreal Engine IDE
 
-Native Qt6 IDE shell: frameless window, custom title bar, dark flat theme,
-dockable file tree + output panels, tabbed plain-text editor with line
-numbers and current-line highlight.
+OpenIDE is a high-performance, lightweight native desktop IDE built with **C++20** and **Qt 6 Widgets**, designed specifically for **C++**, **Unreal Engine**, and modern multi-project C++ development.
 
-See `PROMPT.md` for the full architecture/spec and next-milestone plan
-(syntax highlighting via tree-sitter, LSP via clangd, DAP via lldb-dap).
+## Features
 
-## Build
+- **Fast & Responsive**: Built natively using Qt 6 Widgets and C++20.
+- **Tree-sitter Syntax Highlighting**: Fast, parser-based incremental syntax highlighting for C++.
+- **LSP Code Intelligence**: Powered by `clangd` (autocompletion, diagnostics, hover, go-to definition, find references, document symbols).
+- **Unreal Engine Integration**: `.uproject` awareness, source modules, UnrealBuildTool support.
+- **CMake & Ninja Build Engine**: Asynchronous compile streaming and clickable diagnostic navigation.
+- **DAP Debugging**: Debug Adapter Protocol integration for native debugging (`lldb-dap`).
 
-Requires Qt 6 (Widgets), CMake ≥ 3.21, Ninja, a C++20 compiler.
+## Building
 
-```bash
-# Debian/Ubuntu
-sudo apt install qt6-base-dev cmake ninja-build g++
+### Requirements
+- C++20 compliant compiler (MSVC 2022 / Clang / GCC)
+- CMake 3.22+
+- Ninja build system
+- Qt 6.8+ (Widgets, Core, Gui, Network)
 
-cmake -B build -G Ninja
+### Build Commands (Windows)
+```cmd
+cmake -B build -G "Ninja" -DCMAKE_PREFIX_PATH="C:/Qt/6.8.0/msvc2022_64"
 cmake --build build
-./build/myide
 ```
-
-This has been built and smoke-tested (headless, `QT_QPA_PLATFORM=offscreen`)
-in this environment — it compiles clean and starts its event loop without
-crashing. It has not been visually verified on a real display; do that first
-when you pick this up.
-
-## What's here
-
-- `src/ui/TitleBar` — frameless-window title bar with min/max/close + drag-to-move
-- `src/ui/MainWindow` — dock layout (file tree left, output bottom, tabbed editors center), menu bar, theme loader
-- `src/ui/FileTreePanel` — `QFileSystemModel`-backed project tree, emits `fileActivated`
-- `src/ui/EditorWidget` — `QPlainTextEdit` + line-number gutter + current-line highlight
-- `src/ui/OutputPanel` — read-only log widget for build/console output (not wired to a real build yet)
-- `resources/themes/dark.qss` — the whole visual theme, edit this to restyle
-
-## What's NOT here yet (see PROMPT.md milestones 2+)
-
-- Syntax highlighting (tree-sitter)
-- LSP integration (clangd — completion, diagnostics, go-to-def)
-- Build integration (cmake/ninja invocation + error parsing)
-- DAP integration (lldb-dap — breakpoints, stepping, variables)
-- QScintilla migration (currently `QPlainTextEdit`, fine for the shell milestone)

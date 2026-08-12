@@ -1,84 +1,97 @@
-#pragma once
+﻿#pragma once
 
+#include "editor/EditorWidget.h"
+#include "editor/CompletionController.h"
+#include "lsp/LspManager.h"
+#include "language/LspClient.h"
+#include "language/CompletionService.h"
+#include "core/Logger.h"
+#include "ui/ThemeManager.h"
+#include "ui/LeftToolBar.h"
+#include "ui/TopToolBar.h"
+#include "ui/ToolWindowHeader.h"
+#include "ui/ProjectItemDelegate.h"
+#include "ui/BreadcrumbBar.h"
+#include "ui/SearchEverywhereDialog.h"
 #include <QMainWindow>
 #include <QTabWidget>
-#include <QDockWidget>
-#include "core/SymbolIndex.h"
+#include <QTreeView>
+#include <QFileSystemModel>
+#include <QPlainTextEdit>
+#include <QLabel>
+#include <QListWidget>
 
-class LspClient;
-class ProblemsPanel;
-class SymbolIndexer;
-class NavigationBar;
-class StructurePanel;
-class GitManager;
-class GitPanel;
-class TestRunnerPanel;
-class SearchEverywhereDialog;
-class TitleBar;
-class FileTreePanel;
-class OutputPanel;
-class DapClient;
-class DebugToolbar;
-class CMakeBar;
-class TerminalPanel;
-class VariablesPanel;
-class CallStackPanel;
-class ActivityBar;
-class StatusBar;
+namespace OpenIDE::UI {
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
+
 public:
     explicit MainWindow(QWidget* parent = nullptr);
+    ~MainWindow() override;
+
+    void openFile(const std::filesystem::path& path);
+    void openFolder(const std::filesystem::path& path);
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
+    void closeEvent(QCloseEvent* event) override;
+    void changeEvent(QEvent* event) override;
+    void moveEvent(QMoveEvent* event) override;
+    void resizeEvent(QResizeEvent* event) override;
 
 private slots:
-    void openFolder();
-    void openFile(const QString& path);
-    void closeEditorTab(int index);
-    void startLspServer(const QString& projectDir);
-    void openSearchEverywhere();
-    void renameSymbolUnderCursor();
+    void onOpenFileAction();
+    void onOpenFolderAction();
+    void onSaveAction();
+    void onSaveAllAction();
+    void onTabCloseRequested(int index);
+    void onSearchEverywhereAction();
+    void onGoToDefinitionAction();
+    void onFindReferencesAction();
+    void toggleFocusMode();
+
+    void onCompletionRequested(const QString& prefix, int line, int col);
+    void onDiagnosticsPublished(const std::filesystem::path& path, const std::vector<Editor::Diagnostic>& diagnostics);
+    void onLogEmitted(OpenIDE::Core::LogLevel level, const QString& category, const QString& message, const QString& formattedMessage);
 
 private:
-    void buildMenus();
-    void buildDockPanels();
-    void applyTheme();
+    void createMenuBar();
+    void createTopToolBar();
+    void createSidebar();
+    void createEditorArea();
+    void createBottomPanels();
+    void createStatusBar();
+    void applyDarkTheme();
 
-    TitleBar* m_titleBar = nullptr;
-    QWidget* m_centralHost = nullptr;
-    ActivityBar* m_activityBar = nullptr;
-    StatusBar* m_statusBar = nullptr;
-    CMakeBar* m_cmakeBar = nullptr;
-    DebugToolbar* m_debugToolbar = nullptr;
-    NavigationBar* m_navigationBar = nullptr;
+    LeftToolBar* m_leftToolBar = nullptr;
+    TopToolBar* m_topToolBar = nullptr;
+
+    QWidget* m_projectPanel = nullptr;
+    ToolWindowHeader* m_projectHeader = nullptr;
+    QFileSystemModel* m_fileModel = nullptr;
+    QTreeView* m_treeView = nullptr;
+
     QTabWidget* m_editorTabs = nullptr;
-    FileTreePanel* m_fileTree = nullptr;
-    OutputPanel* m_outputPanel = nullptr;
-    ProblemsPanel* m_problemsPanel = nullptr;
-    StructurePanel* m_structurePanel = nullptr;
-    GitPanel* m_gitPanel = nullptr;
-    TestRunnerPanel* m_testPanel = nullptr;
-    TerminalPanel* m_terminalPanel = nullptr;
-    VariablesPanel* m_variablesPanel = nullptr;
-    CallStackPanel* m_callStackPanel = nullptr;
+    BreadcrumbBar* m_breadcrumbBar = nullptr;
 
-    QDockWidget* m_fileTreeDock = nullptr;
-    QDockWidget* m_outputDock = nullptr;
-    QDockWidget* m_problemsDock = nullptr;
-    QDockWidget* m_structureDock = nullptr;
-    QDockWidget* m_gitDock = nullptr;
-    QDockWidget* m_testDock = nullptr;
-    QDockWidget* m_terminalDock = nullptr;
-    QDockWidget* m_variablesDock = nullptr;
-    QDockWidget* m_callStackDock = nullptr;
+    QWidget* m_bottomPanel = nullptr;
+    ToolWindowHeader* m_bottomHeader = nullptr;
+    QTabWidget* m_bottomTabs = nullptr;
+    QPlainTextEdit* m_outputLog = nullptr;
+    QListWidget* m_problemsList = nullptr;
 
-    LspClient* m_lspClient = nullptr;
-    DapClient* m_dapClient = nullptr;
-    SymbolIndex m_symbolIndex;
-    SymbolIndexer* m_symbolIndexer = nullptr;
-    GitManager* m_gitManager = nullptr;
-    qint64 m_lastShiftTime{0};
+    QLabel* m_statusLabel = nullptr;
+    QLabel* m_gitLabel = nullptr;
+    QLabel* m_cursorPosLabel = nullptr;
+    QLabel* m_lspStatusLabel = nullptr;
+
+    Language::LspClient* m_lspClient = nullptr;
+    Language::CompletionService* m_completionService = nullptr;
+    Editor::CompletionController* m_completionController = nullptr;
+    SearchEverywhereDialog* m_searchDialog = nullptr;
+
+    bool m_focusMode = false;
 };
+
+} // namespace OpenIDE::UI

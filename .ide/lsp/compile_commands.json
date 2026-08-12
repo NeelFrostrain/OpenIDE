@@ -1,0 +1,647 @@
+[
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\CMakeFiles\\4.4.0\\CompilerIdC\\CMakeCCompilerId.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\CMakeFiles\\4.4.0\\CompilerIdC\\CMakeCCompilerId.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\CMakeFiles\\4.4.0\\CompilerIdCXX\\CMakeCXXCompilerId.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\CMakeFiles\\4.4.0\\CompilerIdCXX\\CMakeCXXCompilerId.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\CMakeFiles\\ShowIncludes\\main.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\CMakeFiles\\ShowIncludes\\main.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\A5Q22ZIOL5\\moc_ProjectIndexer.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\A5Q22ZIOL5\\moc_ProjectIndexer.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\A5Q22ZIOL5\\moc_ProjectManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\A5Q22ZIOL5\\moc_ProjectManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspDiagnosticsManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspDiagnosticsManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspRequestManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspRequestManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspSemanticTokenManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\DAV4RYVXD3\\moc_LspSemanticTokenManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DGKFLW4REM\\moc_CompletionService.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\DGKFLW4REM\\moc_CompletionService.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DGKFLW4REM\\moc_LspClient.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\DGKFLW4REM\\moc_LspClient.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\DGKFLW4REM\\moc_LspTransport.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\DGKFLW4REM\\moc_LspTransport.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\ISMKEKEPX5\\moc_Application.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\ISMKEKEPX5\\moc_Application.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\mocs_compilation.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\mocs_compilation.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\PRMOGMWJPH\\moc_Logger.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\PRMOGMWJPH\\moc_Logger.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\SKMTTJJW33\\moc_TreeSitterHighlighter.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\SKMTTJJW33\\moc_TreeSitterHighlighter.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_CompletionController.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_CompletionController.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_CompletionPopup.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_CompletionPopup.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_Document.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_Document.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_DocumentManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_DocumentManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_EditorWidget.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\W4MZGBQALC\\moc_EditorWidget.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\XPS2I2KIDW\\moc_SnippetEngine.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\XPS2I2KIDW\\moc_SnippetEngine.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_BreadcrumbBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_BreadcrumbBar.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_LeftToolBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_LeftToolBar.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_MainWindow.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_MainWindow.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_ProjectItemDelegate.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_ProjectItemDelegate.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_SearchEverywhereDialog.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_SearchEverywhereDialog.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_ToolWindowHeader.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_ToolWindowHeader.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_TopToolBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\MyIDE_autogen\\YPKJ5OE7LN\\moc_TopToolBar.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\A5Q22ZIOL5\\moc_ProjectIndexer.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\A5Q22ZIOL5\\moc_ProjectIndexer.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\A5Q22ZIOL5\\moc_ProjectManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\A5Q22ZIOL5\\moc_ProjectManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspDiagnosticsManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspDiagnosticsManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspRequestManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspRequestManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspSemanticTokenManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DAV4RYVXD3\\moc_LspSemanticTokenManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_CompletionService.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_CompletionService.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_LspClient.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_LspClient.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_LspTransport.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\DGKFLW4REM\\moc_LspTransport.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\ISMKEKEPX5\\moc_Application.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\ISMKEKEPX5\\moc_Application.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\mocs_compilation.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\mocs_compilation.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\PRMOGMWJPH\\moc_Logger.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\PRMOGMWJPH\\moc_Logger.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\SKMTTJJW33\\moc_TreeSitterHighlighter.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\SKMTTJJW33\\moc_TreeSitterHighlighter.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_CompletionController.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_CompletionController.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_CompletionPopup.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_CompletionPopup.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_Document.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_Document.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_DocumentManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_DocumentManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_EditorWidget.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\W4MZGBQALC\\moc_EditorWidget.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\XPS2I2KIDW\\moc_SnippetEngine.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\XPS2I2KIDW\\moc_SnippetEngine.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_BreadcrumbBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_BreadcrumbBar.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_LeftToolBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_LeftToolBar.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_MainWindow.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_MainWindow.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_ProjectItemDelegate.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_ProjectItemDelegate.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_SearchEverywhereDialog.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_SearchEverywhereDialog.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_ToolWindowHeader.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_ToolWindowHeader.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_TopToolBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\OpenIDE_autogen\\YPKJ5OE7LN\\moc_TopToolBar.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\tree_sitter_cpp_autogen\\mocs_compilation.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\tree_sitter_cpp_autogen\\mocs_compilation.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\tree_sitter_runtime_autogen\\mocs_compilation.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\tree_sitter_runtime_autogen\\mocs_compilation.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\bindings\\node\\binding.cc\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\bindings\\node\\binding.cc"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\bindings\\python\\tree_sitter_cpp\\binding.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\bindings\\python\\tree_sitter_cpp\\binding.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\examples\\rule.cc\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\examples\\rule.cc"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\src\\parser.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\src\\parser.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\src\\scanner.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\src\\scanner.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\test\\highlight\\keywords.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\test\\highlight\\keywords.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\test\\highlight\\names.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-cpp-src\\test\\highlight\\names.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\cli\\src\\generate\\templates\\js-binding.cc\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\cli\\src\\generate\\templates\\js-binding.cc"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\cli\\src\\generate\\templates\\py-binding.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\cli\\src\\generate\\templates\\py-binding.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\binding_web\\binding.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\binding_web\\binding.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\alloc.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\alloc.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\get_changed_ranges.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\get_changed_ranges.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\language.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\language.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\lexer.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\lexer.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\lib.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\lib.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\node.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\node.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\parser.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\parser.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\query.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\query.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\stack.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\stack.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\subtree.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\subtree.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\tree.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\tree.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\tree_cursor.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\tree_cursor.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\wasm\\stdlib.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\wasm\\stdlib.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\wasm_store.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\lib\\src\\wasm_store.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\epsilon_external_tokens\\scanner.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\epsilon_external_tokens\\scanner.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\external_and_internal_anonymous_tokens\\scanner.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\external_and_internal_anonymous_tokens\\scanner.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\external_and_internal_tokens\\scanner.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\external_and_internal_tokens\\scanner.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\external_extra_tokens\\scanner.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\external_extra_tokens\\scanner.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\external_tokens\\scanner.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\external_tokens\\scanner.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\external_unicode_column_alignment\\scanner.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\external_unicode_column_alignment\\scanner.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\get_col_should_hang_not_crash\\scanner.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\get_col_should_hang_not_crash\\scanner.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\inverted_external_token\\scanner.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\inverted_external_token\\scanner.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\uses_current_column\\scanner.c\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fixtures\\test_grammars\\uses_current_column\\scanner.c"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fuzz\\fuzzer.cc\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\fuzz\\fuzzer.cc"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\profile\\heap.cc\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\build\\_deps\\tree-sitter-src\\test\\profile\\heap.cc"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\app\\Application.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\app\\Application.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\core\\Config.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\core\\Config.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\core\\Logger.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\core\\Logger.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\cpp\\CompilationDatabase.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\cpp\\CompilationDatabase.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\CompletionController.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\CompletionController.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\CompletionPopup.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\CompletionPopup.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\Document.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\Document.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\DocumentManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\DocumentManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\EditorWidget.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\EditorWidget.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetEngine.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetEngine.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetParser.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetParser.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetRegistry.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetRegistry.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetSession.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\editor\\snippets\\SnippetSession.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\language\\CompletionContext.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\language\\CompletionContext.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\language\\CompletionRanking.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\language\\CompletionRanking.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\language\\CompletionService.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\language\\CompletionService.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\language\\IncludeIndex.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\language\\IncludeIndex.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\language\\LspClient.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\language\\LspClient.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\language\\LspTransport.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\language\\LspTransport.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\lsp\\LspDiagnosticsManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\lsp\\LspDiagnosticsManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\lsp\\LspManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\lsp\\LspManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\lsp\\LspRequestManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\lsp\\LspRequestManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\lsp\\LspSemanticTokenManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\lsp\\LspSemanticTokenManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\main.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\main.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\project\\ProjectIndexer.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\project\\ProjectIndexer.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\project\\ProjectManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\project\\ProjectManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\project\\WorkspaceManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\project\\WorkspaceManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\syntax\\TreeSitterHighlighter.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\syntax\\TreeSitterHighlighter.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\ui\\BreadcrumbBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\ui\\BreadcrumbBar.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\ui\\LeftToolBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\ui\\LeftToolBar.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\ui\\MainWindow.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\ui\\MainWindow.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\ui\\ProjectItemDelegate.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\ui\\ProjectItemDelegate.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\ui\\SearchEverywhereDialog.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\ui\\SearchEverywhereDialog.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\ui\\ThemeManager.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\ui\\ThemeManager.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\ui\\ToolWindowHeader.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\ui\\ToolWindowHeader.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\ui\\TopToolBar.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\ui\\TopToolBar.cpp"
+    },
+    {
+        "command": "clang++ -std=c++20 -I\"E:\\Projects\\nscode\" -c \"E:\\Projects\\nscode\\src\\unreal\\UnrealProjectDetector.cpp\"",
+        "directory": "E:\\Projects\\nscode",
+        "file": "E:\\Projects\\nscode\\src\\unreal\\UnrealProjectDetector.cpp"
+    }
+]
